@@ -5,6 +5,13 @@
     <title>Title</title>
 </head>
 <body>
-
+    <h1>Upload image list</h1>
+    {% if images %}
+        {% for item in images %}
+            <img src="{{ item.image_path }}" alt="" style="width: 150px; height: 150px;">
+        {% endfor %}
+    {% else %}
+        <p>No image uploaded!</p>
+    {% endif %}
 </body>
 </html>
