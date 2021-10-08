@@ -2,8 +2,8 @@ import React from "react";
 import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
 
 import Login from "./pages/login";
-import Upload from "./pages/upload";
-import Home from "./pages/home";
+import UploadPage from "./pages/upload";
+import HomePage from "./pages/home";
 
 function App() {
   return (
@@ -12,13 +12,13 @@ function App() {
       <BrowserRouter>
         <Switch>
           <Route exact path="/">
-            <Home></Home>
+            <HomePage></HomePage>
           </Route>
           <Route path="/login">
             <Login></Login>
           </Route>
           <Route path="/upload">
-            <Upload></Upload>
+            <UploadPage></UploadPage>
           </Route>
         </Switch>
       </BrowserRouter>

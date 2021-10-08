@@ -1,8 +1,8 @@
 import React from "react";
 import "./upload.less";
 
-function Upload() {
+function UploadPage() {
   return <div>Upload Page</div>;
 }
 
-export default Upload;
+export default UploadPage;
