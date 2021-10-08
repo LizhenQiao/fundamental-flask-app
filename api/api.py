@@ -25,7 +25,7 @@ def login():
     data = request.get_json()
 
     cur = mysql.connection.cursor()
-    query = "SELECT password FROM accounts WHERE username='{}'".format(data['username'])
+    query = "SELECT user_password FROM users WHERE user_name='{}'".format(data['username'])
     cur.execute(query)
     mysql.connection.commit()
     cur.close()
@@ -39,7 +39,7 @@ def register():
 
         cur = mysql.connection.cursor()
 
-        query = "INSERT INTO Accounts(username, password) VALUES('{}', '{}');".format(data['username'], data['password'])
+        query = "INSERT INTO users(user_name, user_password) VALUES('{}', '{}');".format(data['username'], data['password'])
         cur.execute(query)
         mysql.connection.commit()
         cur.close()
