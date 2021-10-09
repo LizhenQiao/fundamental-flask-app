@@ -26,7 +26,6 @@ function Register() {
       .then((data) => {
         if (data.success === true) {
           console.log("successfully add new account.");
-          
           // TODO: 清空input框；注册成功/失败提示 
           // document.getElementById("username-input")!.value = "";
         } else {
