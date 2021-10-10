@@ -69,27 +69,15 @@ def upload(user_name):
             fname = secure_filename(f.filename)
             image = '/static/upload/{}'.format(fname)
             print('filename - {}'.format(image))
-            #blurname = 'blur_{}'.format(fname)
-            #shadename = 'shade_{}'.format(fname)
-            #spreadname = 'spread_{}'.format(fname)
             filepath = os.path.join(IMAGE_UPLOAD, fname)
             f.save(filepath)
-            #with Image(filename=fname) as original:
-            #    with original.clone() as imgblur:
-            #        imgblur.blur(radius=0, sigma=8)
-            #        imgblur.save(filename=blurname)
-            #        blurpath = os.path.join(IMAGE_UPLOAD, blurname)
-            #        f.save(blurpath)
-            #    with original.clone() as imgshade:
-            #        imgshade.shade(gray=True, azimuth=286.0, elevation=45.0)
-            #        imgshade.save(filename=shadename)
-            #        shadepath = os.path.join(IMAGE_UPLOAD, shadename)
-            #        f.save(shadepath)
-            #    with original.clone() as imgspread:
-            #        imgspread.spread(radius=8)
-            #        imgspread.save(filename=spreadname)
-            #        spreadpath = os.path.join(IMAGE_UPLOAD, spreadname)
-            #        f.save(spreadpath)
+            blur_img = '/static/upload/blur_{}'.format(fname)
+            shade_img = '/static/upload/shade_{}'.format(fname)
+            spread_img = '/static/upload/spread_{}'.format(fname)
+            blur_path = os.path.join(IMAGE_UPLOAD, 'blur_' + fname)
+            shade_path = os.path.join(IMAGE_UPLOAD, 'shade_' + fname)
+            spread_path = os.path.join(IMAGE_UPLOAD, 'spread_' + fname)
+            transformation(filepath, blur_path, shade_path, spread_path)
         else:
             flash('Wrong image type')
             return render_template('user/user_page.html', user_name=session['user_name'])
@@ -97,9 +85,9 @@ def upload(user_name):
         query = "INSERT INTO image(image_path, user_id) " \
                 "VALUES (%s, %s)"
         cursor.execute(query, (image, session['user_id']))
-        #cursor.execute(query, ('/static/upload/{}'.format(blurname), session['user_id']))
-        #cursor.execute(query, ('/static/upload/{}'.format(shadename), session['user_id']))
-        #cursor.execute(query, ('/static/upload/{}'.format(spreadname), session['user_id']))
+        cursor.execute(query, (blur_img, session['user_id']))
+        cursor.execute(query, (shade_img, session['user_id']))
+        cursor.execute(query, (spread_img, session['user_id']))
         mysql.connection.commit()
         cursor.close()
         return render_template('user/user_page.html', user_name=session['user_name'])
@@ -118,6 +106,13 @@ def upload_url(user_name):
             url_image = "/static/upload/" + filename
             filepath = os.path.join(IMAGE_UPLOAD, filename)
             urllib.request.urlretrieve(url, filepath)
+            blur_img = '/static/upload/blur_{}'.format(filename)
+            shade_img = '/static/upload/shade_{}'.format(filename)
+            spread_img = '/static/upload/spread_{}'.format(filename)
+            blur_path = os.path.join(IMAGE_UPLOAD, 'blur_' + filename)
+            shade_path = os.path.join(IMAGE_UPLOAD, 'shade_' + filename)
+            spread_path = os.path.join(IMAGE_UPLOAD, 'spread_' + filename)
+            transformation(filepath, blur_path, shade_path, spread_path)
         else:
             flash('Wrong URL')
             return render_template('user/user_page.html', user_name=session['user_name'])
@@ -125,11 +120,27 @@ def upload_url(user_name):
         query = "INSERT INTO image(image_path, user_id) " \
                 "VALUES (%s, %s)"
         cursor.execute(query, (url_image, session['user_id']))
+        cursor.execute(query, (blur_img, session['user_id']))
+        cursor.execute(query, (shade_img, session['user_id']))
+        cursor.execute(query, (spread_img, session['user_id']))
         mysql.connection.commit()
         cursor.close()
         return render_template('user/user_page.html', user_name=session['user_name'])
     else:
         return render_template('image/image_url.html')
+
+
+def transformation(filepath, blur_path, shade_path, spread_path):
+    with Image(filename=filepath) as original:
+        with original.clone() as img_blur:
+            img_blur.blur(radius=0, sigma=8)
+            img_blur.save(filename=blur_path)
+        with original.clone() as img_shade:
+            img_shade.shade(gray=True, azimuth=286.0, elevation=45.0)
+            img_shade.save(filename=shade_path)
+        with original.clone() as img_spread:
+            img_spread.spread(radius=8)
+            img_spread.save(filename=spread_path)
 
 
 @webapp.route('/user/<string:user_name>/show', methods=['GET', 'POST'])
