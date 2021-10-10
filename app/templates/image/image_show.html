@@ -8,7 +8,7 @@
     <h1>Upload image list</h1>
     {% if images %}
         {% for item in images %}
-            <img src="{{ item.image_path }}" alt="" style="width: 150px; height: 150px;">
+    <a href="{{ item.image_path }}" ><img src="{{ item.image_path }}" alt="" style="width: 150px; height: 150px;"></a>
         {% endfor %}
     {% else %}
         <p>No image uploaded!</p>
