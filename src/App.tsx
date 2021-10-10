@@ -2,8 +2,9 @@ import React from "react";
 import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
 
 import Login from "./pages/login";
-import UploadPage from "./pages/upload";
+import AlbumPage from "./pages/album";
 import HomePage from "./pages/home";
+import AdminPage from "./pages/admin";
 
 function App() {
   return (
@@ -14,11 +15,17 @@ function App() {
           <Route exact path="/">
             <HomePage></HomePage>
           </Route>
+          <Route path="/home">
+            <HomePage></HomePage>
+          </Route>
+          <Route path="/admin">
+            <AdminPage></AdminPage>
+          </Route>
           <Route path="/login">
             <Login></Login>
           </Route>
-          <Route path="/upload">
-            <UploadPage></UploadPage>
+          <Route path="/album">
+            <AlbumPage></AlbumPage>
           </Route>
         </Switch>
       </BrowserRouter>

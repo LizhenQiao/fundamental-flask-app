@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
+import cookie from "react-cookies";
 import "./login.less";
 
 type AccountInformation = {
@@ -11,6 +12,7 @@ type AccountInformation = {
 function LoginPage() {
   const [currentUsername, setCurrentUsername] = useState("");
   const [currentPassword, setCyrrentPassword] = useState("");
+  const [redirectToHomePage, setRedirectToHomePage] = useState(false);
 
   useEffect(() => {}, []);
 
@@ -23,8 +25,13 @@ function LoginPage() {
       body: JSON.stringify(accountInformation),
     })
       .then((res) => res.json())
-      .then((data) => console.log(data));
-      // TODO: 清空input框; 登陆成功提示；跳转；
+      .then((data) => {
+        if (data.success) {
+          cookie.save("username", accountInformation.username, { path: "/" });
+          setRedirectToHomePage(true);
+        }
+      });
+    // TODO: 清空input框; 登陆成功提示；跳转；
   };
 
   return (
@@ -37,7 +44,10 @@ function LoginPage() {
       />
       <br />
       <span>Password:</span>
-      <input type="text" onChange={(e) => setCyrrentPassword(e.target.value)} />
+      <input
+        type="password"
+        onChange={(e) => setCyrrentPassword(e.target.value)}
+      />
       <br />
       <button
         onClick={() =>
@@ -46,6 +56,7 @@ function LoginPage() {
       >
         Login
       </button>
+      {redirectToHomePage && <Redirect push to="/home" />}
     </div>
   );
 }

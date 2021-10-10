@@ -1,15 +1,79 @@
-import React, { useState } from "react";
-import Register from "../../components/register";
+import React, { useState, useEffect } from "react";
+import cookie from "react-cookies";
+import { Redirect } from "react-router";
+import Logout from "../../components/logout";
+import checkLogin from "../../utils/checkLogin";
 import "./home.less";
 
-//TODO: /login页面跳转至此，检测账号性质，如果是admin，选择展示manage_account部分，否则这些部分不展示
 function HomePage() {
-  const [isAdmin, setIsAdmin] = useState(false);
-  
+  const [showResetPasswordDiv, setShowResetPasswordDiv] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [redirectToLoginPage, setRedirectToLoginPage] = useState(false);
+
+  useEffect(() => {
+    if (!checkLogin()) {
+      setRedirectToLoginPage(true);
+    }
+  }, []);
+
+  const confirmResetPassword = async (username: string, password: string) => {
+    if (newPassword !== confirmPassword) {
+      console.log(
+        "new password and confirm password should be equal. please try again."
+      );
+      return;
+    }
+    await fetch("api/reset_password", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username: username, password: password }),
+    })
+      .then((res) => res.json())
+      .then((data) => console.log(data));
+  };
+
+  const resetPasswordDiv = (username: string) => {
+    return (
+      <div>
+        <p>reset password</p>
+        <span>New Password:</span>
+        <input
+          type="password"
+          className="password-input-new"
+          id="password-input__new"
+          onChange={(e) => setNewPassword(e.target.value)}
+        />
+        <br />
+        <span>Confirm New Password:</span>
+        <input
+          type="password"
+          className="password-input-confirm"
+          id="password-input__confirm"
+          onChange={(e) => setConfirmPassword(e.target.value)}
+        />
+        <br />
+        <button onClick={() => confirmResetPassword(username, newPassword)}>
+          Reset
+        </button>
+      </div>
+    );
+  };
+
   return (
     <div>
       <h2>HomePage</h2>
-      <Register></Register>
+      <button onClick={() => setShowResetPasswordDiv(true)}>
+        Reset Password
+      </button>
+      {showResetPasswordDiv && (
+          <button onClick={() => setShowResetPasswordDiv(false)}>hide</button>
+        ) &&
+        resetPasswordDiv(cookie.load("username"))}
+      <Logout />
+      {redirectToLoginPage && <Redirect to="/login" />}
     </div>
   );
 }

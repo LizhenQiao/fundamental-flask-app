@@ -13,7 +13,10 @@ function Register() {
 
   const clickAdd = async (newAccount: AccountInformation) => {
     if (newPassword !== confirmPassword) {
-      console.log("new password and confirm password should be equal. please try again.")
+      console.log(
+        "new password and confirm password should be equal. please try again."
+      );
+      return;
     }
     await fetch("api/register", {
       method: "POST",
@@ -26,7 +29,7 @@ function Register() {
       .then((data) => {
         if (data.success === true) {
           console.log("successfully add new account.");
-          // TODO: 清空input框；注册成功/失败提示 
+          // TODO: 清空input框；注册成功/失败提示
           // document.getElementById("username-input")!.value = "";
         } else {
           console.log(data.error);
@@ -40,17 +43,26 @@ function Register() {
       <input
         type="text"
         className="username-input"
-        id = "username-input"
+        id="username-input"
         placeholder="Please input new username"
         onChange={(e) => setNewUsername(e.target.value)}
       />
       <br />
       <span>New Password:</span>
-      <input type="password" className="password-input-new" id="password-input__new" onChange={(e) => setNewPassword(e.target.value)} />
+      <input
+        type="password"
+        className="password-input-new"
+        id="password-input__new"
+        onChange={(e) => setNewPassword(e.target.value)}
+      />
       <br />
       <span>Confirm New Password:</span>
-      <input type="password" className="password-input-confirm" id="password-input__confirm" onChange={(e) => setConfirmPassword(e.target.value)} />
-      {/* TODO: Add verification of two password input. */}
+      <input
+        type="password"
+        className="password-input-confirm"
+        id="password-input__confirm"
+        onChange={(e) => setConfirmPassword(e.target.value)}
+      />
       <br />
       <button
         onClick={() =>
