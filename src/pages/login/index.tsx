@@ -48,10 +48,10 @@ function LoginPage() {
       .then((data) => {
         if (data.success) {
           cookie.save("username", accountInformation.username, { path: "/" });
+          cookie.save("userid", data.userid, { path: "/" });
           setRedirectToAdminPage(true);
         }
       });
-    // TODO: 清空input框; 登陆成功提示；跳转；
   };
 
   return (

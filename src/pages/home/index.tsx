@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import cookie from "react-cookies";
 import "./home.less";
 
@@ -6,6 +6,9 @@ function HomePage() {
   const [showResetPasswordDiv, setShowResetPasswordDiv] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [uploadImage, setUploadImage] = useState<FormData>();
+
+  const uploadRef = useRef() as React.MutableRefObject<HTMLInputElement>;
 
   const confirmResetPassword = async (username: string, password: string) => {
     if (newPassword !== confirmPassword) {
@@ -23,6 +26,29 @@ function HomePage() {
     })
       .then((res) => res.json())
       .then((data) => console.log(data));
+  };
+
+  const getImg = () => {
+    if (uploadRef.current.files) {
+      let fileData = uploadRef.current.files[0];
+      let formData = new FormData();
+      formData.append("uploadImage", fileData);
+      setUploadImage(formData);
+    }
+  };
+
+  const clickSubmit = async () => {
+    await fetch("api/upload", {
+      method: "POST",
+      headers: {},
+      body: uploadImage,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          console.log("Image upload successfully.");
+        }
+      });
   };
 
   const resetPasswordDiv = (username: string) => {
@@ -52,6 +78,24 @@ function HomePage() {
     );
   };
 
+  const uploadImgDiv = () => {
+    return (
+      <div>
+        <div>Upload Image</div>
+        <input
+          type="file"
+          name="file"
+          multiple={true}
+          id="uploadimg"
+          ref={uploadRef}
+          onChange={() => getImg()}
+        />
+        <br />
+        <button onClick={() => clickSubmit()}>Submit</button>
+      </div>
+    );
+  };
+
   return (
     <div>
       <h2>HomePage</h2>
@@ -62,6 +106,7 @@ function HomePage() {
           <button onClick={() => setShowResetPasswordDiv(false)}>hide</button>
         ) &&
         resetPasswordDiv(cookie.load("username"))}
+      {uploadImgDiv()}
     </div>
   );
 }

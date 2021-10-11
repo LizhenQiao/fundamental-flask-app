@@ -1,12 +1,23 @@
-import time
 from flask import Flask, json, request, jsonify, session
 from flask_mysqldb import MySQL
-import yaml
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_cors import CORS
+from wand.image import Image
+from urllib.parse import urlparse
+from werkzeug.utils import secure_filename
+import yaml
+import os
+import validators
+
 
 # TODO: 基本功能完成后加try except， 暂时先删除了以免影响debug
 app = Flask(__name__)
 app.secret_key = "nothashfornow"
+CORS(app)
+
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'bmp'])
+BASEDIR = os.path.dirname(os.path.abspath(__file__))
+IMAGE_UPLOAD = os.path.join(BASEDIR, 'static/upload')
 
 # configure db
 db = yaml.load(open('static/db.yaml'), Loader=yaml.FullLoader)
@@ -16,6 +27,23 @@ app.config['MYSQL_PASSWORD'] = db['mysql_password']
 app.config['MYSQL_DB'] = db['mysql_db']
 
 mysql = MySQL(app)
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+def transformation(filepath, blur_path, shade_path, spread_path):
+    with Image(filename=filepath) as original:
+        with original.clone() as img_blur:
+            img_blur.blur(radius=0, sigma=8)
+            img_blur.save(filename=blur_path)
+        with original.clone() as img_shade:
+            img_shade.shade(gray=True, azimuth=286.0, elevation=45.0)
+            img_shade.save(filename=shade_path)
+        with original.clone() as img_spread:
+            img_spread.spread(radius=8)
+            img_spread.save(filename=spread_path)
 
 
 @app.route("/api/accounts", methods=['GET', 'POST'])
@@ -37,23 +65,25 @@ def get_accounts():
 @app.route("/api/login", methods=['POST'])
 def login():
     # Login logic. Only available for normal users.
-    try:
-        data = request.get_json()
-        username, password = data['username'], data['password']
-        cur = mysql.connection.cursor()
-        query = 'SELECT user_password FROM users WHERE user_name="{}"'.format(
-            username)
-        cur.execute(query)
-        hashed_password = cur.fetchone()[0]
-        if not hashed_password:
-            raise Exception('No username matches.')
-        cur.close()
+    # try:
+    data = request.get_json()
+    username, password = data['username'], data['password']
+    cur = mysql.connection.cursor()
+    query = 'SELECT user_password, user_id FROM users WHERE user_name="{}"'.format(
+        username)
+    cur.execute(query)
+    user_data = cur.fetchone()
+    hashed_password = user_data[0]
+    user_id = user_data[1]
+    if not hashed_password:
+        raise Exception('No username matches.')
+    cur.close()
 
-        if check_password_hash(hashed_password, password):
-            return jsonify({"success": True})
-    except Exception as e:
-        print(e)
-        return jsonify({"success": False, "error": ''})
+    if check_password_hash(hashed_password, password):
+        return jsonify({"success": True, "userid": user_id})
+    # except Exception as e:
+    #     print(e)
+    #     return jsonify({"success": False, "error": ''})
 
 
 @app.route("/api/admin_login", methods=['POST'])
@@ -114,9 +144,34 @@ def deleteAccount():
 @app.route("/api/upload", methods=['POST'])
 def upload():
     # upload files. Only available for normal users.
-    data = request.get_json()
-
-    return jsonify({"result": "success", "data": data})
+    f = request.files['uploadImage']
+    if f and allowed_file(f.filename):
+        fname = secure_filename(f.filename)
+        image = '/static/upload/{}'.format(fname)
+        print('filename - {}'.format(image))
+        filepath = os.path.join(IMAGE_UPLOAD, fname)
+        f.save(filepath)
+        blur_img = '/static/upload/blur_{}'.format(fname)
+        shade_img = '/static/upload/shade_{}'.format(fname)
+        spread_img = '/static/upload/spread_{}'.format(fname)
+        blur_path = os.path.join(IMAGE_UPLOAD, 'blur_' + fname)
+        shade_path = os.path.join(IMAGE_UPLOAD, 'shade_' + fname)
+        spread_path = os.path.join(IMAGE_UPLOAD, 'spread_' + fname)
+        transformation(filepath, blur_path, shade_path, spread_path)
+    else:
+        print('Unavailable image type.')
+        return jsonify({"success": False, "error": "Unavailable image type."})
+    cursor = mysql.connection.cursor()
+    query = "INSERT INTO image(image_path, user_id) " \
+            "VALUES (%s, %s)"
+    cursor.execute(query, (image, 1))
+    cursor.execute(query, (blur_img, 1))
+    cursor.execute(query, (shade_img, 1))
+    cursor.execute(query, (spread_img, 1))
+    # TODO: 拿到userid
+    mysql.connection.commit()
+    cursor.close()
+    return jsonify({"success": True})
 
 
 @app.route("/api/reset_password", methods=['POST'])
