@@ -5,6 +5,7 @@ import "./logout.less";
 function Logout() {
   const clickLogout = () => {
     cookie.remove("username", { path: "/" });
+    window.location.reload();
   };
 
   return (

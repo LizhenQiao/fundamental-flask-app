@@ -1,21 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import cookie from "react-cookies";
-import { Redirect } from "react-router";
-import Logout from "../../components/logout";
-import checkLogin from "../../utils/checkLogin";
 import "./home.less";
 
 function HomePage() {
   const [showResetPasswordDiv, setShowResetPasswordDiv] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [redirectToLoginPage, setRedirectToLoginPage] = useState(false);
-
-  useEffect(() => {
-    if (!checkLogin()) {
-      setRedirectToLoginPage(true);
-    }
-  }, []);
 
   const confirmResetPassword = async (username: string, password: string) => {
     if (newPassword !== confirmPassword) {
@@ -72,8 +62,6 @@ function HomePage() {
           <button onClick={() => setShowResetPasswordDiv(false)}>hide</button>
         ) &&
         resetPasswordDiv(cookie.load("username"))}
-      <Logout />
-      {redirectToLoginPage && <Redirect to="/login" />}
     </div>
   );
 }

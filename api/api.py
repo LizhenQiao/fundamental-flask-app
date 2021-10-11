@@ -50,8 +50,6 @@ def login():
         cur.close()
 
         if check_password_hash(hashed_password, password):
-            # TODO: session这些如果有需要，写在前端代码里
-            # session['isLogin'] = 1
             return jsonify({"success": True})
     except Exception as e:
         print(e)
@@ -63,7 +61,7 @@ def adminLogin():
     # Login logic. Only available for admin.
     try:
         data = request.get_json()
-        admin_username, admin_password = data['admin_username'], data['admin_password']
+        admin_username, admin_password = data['username'], data['password']
         cur = mysql.connection.cursor()
         query = 'SELECT admin_password FROM admins WHERE admin_name="{}"'.format(
             admin_username)
@@ -74,8 +72,6 @@ def adminLogin():
         cur.close()
 
         if password == admin_password:
-            # session['isLogin'] = 1
-            # session['isAdmin'] = 1
             return jsonify({"success": True})
     except Exception as e:
         print(e)
