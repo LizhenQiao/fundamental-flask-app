@@ -28,6 +28,7 @@ def admin_login():
 
 @webapp.route('/', methods=['GET', 'POST'])
 def admin_logout():
+    # TODO: 个人倾向于必须人为登出才清空session, 否则直接取session定向到admin/user里
     session.clear()
     return render_template('main.html')
 
@@ -61,6 +62,7 @@ def register():
 
 @webapp.route('/admin/<string:admin_name>/delete', methods=['GET', 'POST'])
 @admin_required
+# TODO: 有空的话delete和update也可以改成交互式，而不是手工输入userid
 def delete(admin_name):
     cursor = mysql.connection.cursor()
     query1 = "SELECT `user_id`, `user_name` FROM users"
@@ -80,6 +82,7 @@ def delete(admin_name):
 
 @webapp.route('/admin/<string:admin_name>/update', methods=['GET', 'POST'])
 @admin_required
+# TODO: 有空的话delete和update也可以改成交互式，而不是手工输入userid
 def update(admin_name):
     if request.method == 'POST':
         update_id = request.form['update_id']

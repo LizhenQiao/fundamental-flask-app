@@ -10,6 +10,7 @@ from urllib.parse import urlparse
 from .utils import login_required
 from werkzeug.utils import secure_filename
 from wand.image import Image
+import random
 
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'bmp'])
@@ -19,6 +20,23 @@ IMAGE_UPLOAD = os.path.join(BASEDIR, 'static/upload')
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+def get_available_filename(filename):
+    user_id = session['user_id']
+    clean_filename = filename.rsplit('.', 1)[0].lower()
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    query = "SELECT * FROM image WHERE user_id='{}'".format(user_id)
+    cursor.execute(query)
+    images = cursor.fetchall()
+    if not images:
+        return filename
+    for image in images:
+        clean_imagename = image["image_path"].rsplit(
+            '/', 1)[1].rsplit('.', 1)[0]
+        if clean_imagename == clean_filename:
+            return clean_filename + str(random.randint(10 ** 9 + 1, 10 ** 10)) + '.' + filename.rsplit('.', 1)[1].lower()
+    return filename
 
 
 @webapp.route('/user', methods=['GET', 'POST'])
@@ -66,9 +84,9 @@ def upload(user_name):
     if request.method == 'POST':
         f = request.files['img']
         if f and allowed_file(f.filename):
-            fname = secure_filename(f.filename)
+            available_fname = get_available_filename(f.filename)
+            fname = secure_filename(available_fname)
             image = '/static/upload/{}'.format(fname)
-            print('filename - {}'.format(image))
             filepath = os.path.join(IMAGE_UPLOAD, fname)
             f.save(filepath)
             blur_img = '/static/upload/blur_{}'.format(fname)
@@ -82,6 +100,7 @@ def upload(user_name):
             flash('Wrong image type')
             return render_template('user/user_page.html', user_name=session['user_name'])
         cursor = mysql.connection.cursor()
+        # TODO: image改成images? 不然感觉有点不规范
         query = "INSERT INTO image(image_path, user_id) " \
                 "VALUES (%s, %s)"
         cursor.execute(query, (image, session['user_id']))
@@ -145,6 +164,7 @@ def transformation(filepath, blur_path, shade_path, spread_path):
 
 @webapp.route('/user/<string:user_name>/show', methods=['GET', 'POST'])
 @login_required
+# 图片展示UI考虑加一个×号返回上一级
 def show(user_name):
     try:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
