@@ -95,7 +95,6 @@ def upload(user_name):
             flash('Wrong image type')
             return render_template('user/user_page.html', user_name=session['user_name'])
         cursor = mysql.connection.cursor()
-        # TODO: image改成images? 不然感觉有点不规范
         query = "INSERT INTO images(image_path, user_id) " \
                 "VALUES (%s, %s)"
         cursor.execute(query, (image, session['user_id']))
