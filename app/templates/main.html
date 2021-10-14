@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>Landing Page</title>
-    </head>
-    <body>
-        <h1>Home</h1>
+  <head>
+    <title>Landing Page</title>
+  </head>
+  <body>
+    <h1>Home</h1>
     <ul>
-        <li><a href="{{url_for('user_login')}}">user login</a></li>
-        <li><a href="{{url_for('admin_login')}}">admin login</a></li>
+      <li><a href="{{url_for('user_login')}}">user login</a></li>
+      <li><a href="{{url_for('admin_login')}}">admin login</a></li>
     </ul>
-
-    </body>
+    <form action="{{url_for('main')}}" method="post">
+      <input type="submit" name="forget-password" value="Password Recovery" />
+    </form>
+  </body>
 </html>

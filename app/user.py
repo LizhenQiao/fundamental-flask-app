@@ -62,12 +62,6 @@ def user_login():
         return render_template('user/user_login.html')
 
 
-@webapp.route('/', methods=['GET', 'POST'])
-def user_logout():
-    session.clear()
-    return render_template('main.html')
-
-
 @webapp.route('/user/<string:user_name>', methods=['GET', 'POST'])
 @login_required
 def user_page(user_name):
@@ -80,6 +74,7 @@ def user_page(user_name):
 
 @webapp.route('/user/<string:user_name>/upload', methods=['GET', 'POST'])
 @login_required
+# 图片大小限制
 def upload(user_name):
     if request.method == 'POST':
         f = request.files['img']
@@ -192,3 +187,9 @@ def change_pw(user_name):
         return render_template('user/user_page.html', user_name=session['user_name'])
     elif request.method == 'GET':
         return render_template('user/change_pw.html')
+
+
+@webapp.route('/user/logout', methods=['GET', 'POST'])
+def user_logout():
+    session.clear()
+    return redirect(url_for("main"))

@@ -26,13 +26,6 @@ def admin_login():
         return render_template('admin/admin_login.html')
 
 
-@webapp.route('/', methods=['GET', 'POST'])
-def admin_logout():
-    # TODO: 个人倾向于必须人为登出才清空session, 否则直接取session定向到admin/user里
-    session.clear()
-    return render_template('main.html')
-
-
 @webapp.route('/admin/<string:admin_name>', methods=['GET', 'POST'])
 @admin_required
 def admin_page(admin_name):
