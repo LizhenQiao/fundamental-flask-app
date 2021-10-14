@@ -26,7 +26,7 @@ def get_available_filename(filename):
     user_id = session['user_id']
     clean_filename = filename.rsplit('.', 1)[0].lower()
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    query = "SELECT * FROM image WHERE user_id='{}'".format(user_id)
+    query = "SELECT * FROM images WHERE user_id='{}'".format(user_id)
     cursor.execute(query)
     images = cursor.fetchall()
     if not images:
@@ -96,7 +96,7 @@ def upload(user_name):
             return render_template('user/user_page.html', user_name=session['user_name'])
         cursor = mysql.connection.cursor()
         # TODO: image改成images? 不然感觉有点不规范
-        query = "INSERT INTO image(image_path, user_id) " \
+        query = "INSERT INTO images(image_path, user_id) " \
                 "VALUES (%s, %s)"
         cursor.execute(query, (image, session['user_id']))
         cursor.execute(query, (blur_img, session['user_id']))
@@ -131,7 +131,7 @@ def upload_url(user_name):
             flash('Wrong URL')
             return render_template('user/user_page.html', user_name=session['user_name'])
         cursor = mysql.connection.cursor()
-        query = "INSERT INTO image(image_path, user_id) " \
+        query = "INSERT INTO images(image_path, user_id) " \
                 "VALUES (%s, %s)"
         cursor.execute(query, (url_image, session['user_id']))
         cursor.execute(query, (blur_img, session['user_id']))
@@ -163,7 +163,7 @@ def transformation(filepath, blur_path, shade_path, spread_path):
 def show(user_name):
     try:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        query = "SELECT * FROM image WHERE user_id=%s"
+        query = "SELECT * FROM images WHERE user_id=%s"
         cursor.execute(query, (session['user_id'],))
         images = cursor.fetchall()
     except Exception as e:

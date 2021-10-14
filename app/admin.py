@@ -38,12 +38,13 @@ def register():
     if request.method == 'POST':
         user_details = request.form
         username = user_details['username']
+        email = user_details['email']
         password = user_details['password'].encode('utf-8')
         hash_password = bcrypt.hashpw(password, bcrypt.gensalt())
         cursor = mysql.connection.cursor()
-        query = "INSERT INTO users(user_name, user_password) " \
-                "VALUES (%s, %s)"
-        cursor.execute(query, (username, hash_password))
+        query = "INSERT INTO users(user_name, user_password, user_email) " \
+                "VALUES (%s, %s, %s)"
+        cursor.execute(query, (username, hash_password, email))
         mysql.connection.commit()
         cursor.close()
         session['user_name'] = username
@@ -95,3 +96,9 @@ def update(admin_name):
         return render_template('admin/admin_page.html', admin_name=admin_name)
     elif request.method == 'GET':
         return render_template('admin/update.html', users=session['users'], admin_name=admin_name)
+
+
+@webapp.route('/user/logout', methods=['GET', 'POST'])
+def admin_logout():
+    session.clear()
+    return redirect(url_for("main"))
