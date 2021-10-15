@@ -3,15 +3,44 @@
 {% block content %}
 
 <body>
-  <h1>Register</h1>
-  <form action="{{url_for('register', admin_name=admin_name)}}" method="POST">
-    <span>Username</span>
-    <input type="text" name="username" /><br />
-    <span>Password</span>
-    <input type="password" name="password" /><br />
-    <span>Email</span>
-    <input type="text" name="email" /><br />
-    <input type="submit" value="Register" />
-  </form>
+  <br />
+  <div class="container">
+    <h1>Register</h1>
+
+    <form action="{{url_for('register', admin_name=admin_name)}}" method="POST">
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Username</label>
+        <input
+          type="text"
+          name="username"
+          class="form-control"
+          id="exampleInputEmail1"
+          aria-describedby="emailHelp"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="exampleInputPassword1" class="form-label">Password</label>
+        <input
+          type="password"
+          name="password"
+          class="form-control"
+          id="exampleInputPassword1"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="exampleInputPassword1" class="form-label">Email</label>
+        <input
+          type="text"
+          name="email"
+          class="form-control"
+          id="exampleInputPassword1"
+        />
+        <div class="form-text">
+          This email will be attached to the account for password recovery.
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Register</button>
+    </form>
+  </div>
 </body>
 {% endblock %}

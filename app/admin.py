@@ -5,6 +5,8 @@ import bcrypt
 import MySQLdb
 from .utils import admin_required
 
+# TODO: 现在flash好像是失效的，并没有弹窗之类的显示，需要处理一下
+
 
 @webapp.route('/admin', methods=['GET', 'POST'])
 def admin_login():

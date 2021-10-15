@@ -14,11 +14,48 @@
     </tr>
     {% endfor %}
   </table>
-  <form action="{{url_for('update', admin_name=admin_name)}}" method="POST">
-    user_id <input type="text" name="update_id" /><br />
-    username <input type="text" name="update_name" /><br />
-    password <input type="password" name="update_password" /><br />
-    <input type="submit" value="update" />
-  </form>
+  <!-- TODO: Update这里的逻辑稍微有点奇怪，如果按照实际代码逻辑的话应该是让用户输入一个user_id后再弹出让用户设置新用户名或密码的地方 
+             不过可以通过加文字提示降低违和感，所以这处不用改了
+  -->
+
+  <div class="container">
+    <h1>Register</h1>
+
+    <form action="{{url_for('update', admin_name=admin_name)}}" method="POST">
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">user_id</label>
+        <input
+          type="text"
+          name="update_id"
+          class="form-control"
+          id="exampleInputEmail1"
+          aria-describedby="emailHelp"
+        />
+        <div class="form-text">
+          Please input the user_id of the account you want to update and then
+          input new username and password below.
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="exampleInputPassword1" class="form-label">username</label>
+        <input
+          type="text"
+          name="update_name"
+          class="form-control"
+          id="exampleInputPassword1"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="exampleInputPassword1" class="form-label">password</label>
+        <input
+          type="password"
+          name="update_password"
+          class="form-control"
+          id="exampleInputPassword1"
+        />
+      </div>
+      <button type="submit" class="btn btn-primary">Update</button>
+    </form>
+  </div>
 </body>
 {% endblock %}

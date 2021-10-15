@@ -75,6 +75,7 @@ def user_page(user_name):
 @webapp.route('/user/<string:user_name>/upload', methods=['GET', 'POST'])
 @login_required
 # 图片大小限制
+# TODO: upload_url出问题了，明天修一下
 def upload(user_name):
     if request.method == 'POST':
         if 'img' in request.files:
@@ -120,19 +121,19 @@ def upload(user_name):
                 shade_path = os.path.join(IMAGE_UPLOAD, 'shade_' + filename)
                 spread_path = os.path.join(IMAGE_UPLOAD, 'spread_' + filename)
                 transformation(filepath, blur_path, shade_path, spread_path)
+                cursor = mysql.connection.cursor()
+                query = "INSERT INTO images(image_path, user_id) " \
+                    "VALUES (%s, %s)"
+                cursor.execute(query, (url_image, session['user_id']))
+                cursor.execute(query, (blur_img, session['user_id']))
+                cursor.execute(query, (shade_img, session['user_id']))
+                cursor.execute(query, (spread_img, session['user_id']))
+                mysql.connection.commit()
+                cursor.close()
+                return render_template('user/user_page.html', user_name=session['user_name'])
             else:
                 flash('Wrong URL')
                 return render_template('user/user_page.html', user_name=session['user_name'])
-            cursor = mysql.connection.cursor()
-            query = "INSERT INTO images(image_path, user_id) " \
-                    "VALUES (%s, %s)"
-            cursor.execute(query, (url_image, session['user_id']))
-            cursor.execute(query, (blur_img, session['user_id']))
-            cursor.execute(query, (shade_img, session['user_id']))
-            cursor.execute(query, (spread_img, session['user_id']))
-            mysql.connection.commit()
-            cursor.close()
-            return render_template('user/user_page.html', user_name=session['user_name'])
     else:
         return render_template('image/image_upload.html')
 
