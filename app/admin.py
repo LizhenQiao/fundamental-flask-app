@@ -78,6 +78,10 @@ def delete(admin_name):
 @admin_required
 # TODO: 有空的话delete和update也可以改成交互式，而不是手工输入userid
 def update(admin_name):
+    cursor = mysql.connection.cursor()
+    query1 = "SELECT `user_id`, `user_name` FROM users"
+    cursor.execute(query1)
+    session['users'] = cursor.fetchall()
     if request.method == 'POST':
         update_id = request.form['update_id']
         update_name = request.form['update_name']
@@ -98,7 +102,7 @@ def update(admin_name):
         return render_template('admin/update.html', users=session['users'], admin_name=admin_name)
 
 
-@webapp.route('/user/logout', methods=['GET', 'POST'])
+@webapp.route('/admin/logout', methods=['GET', 'POST'])
 def admin_logout():
     session.clear()
     return redirect(url_for("main"))

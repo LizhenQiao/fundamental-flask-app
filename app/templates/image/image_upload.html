@@ -1,16 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Upload Image</title>
-</head>
+{% extends "user/user_base.html" %}
+<!--                        -->
+{% block content %}
 <body>
-    <h1>Upload your image</h1>
-    <form action="{{url_for('upload', user_name=session['user_name'])}}" method='POST' enctype='multipart/form-data'>
-        <input type="file" name="img" /> <br>
-        <label for="" style="color: red;">*</label> <label for="" style="font-style: italic;">Only 'png', 'jpg', 'bmp' file format allowed</label>
-        <br>
-        <input type="submit" value="upload"/>
-    </form>
+  <h1>Upload your image</h1>
+  <form
+    action="{{url_for('upload', user_name=session['user_name'])}}"
+    method="POST"
+    enctype="multipart/form-data"
+  >
+    <input type="file" name="img" /> <br />
+    <label for="" style="color: red">*</label>
+    <label for="" style="font-style: italic"
+      >Only 'png', 'jpg', 'bmp' file format allowed</label
+    >
+    <br />
+    <input type="submit" value="upload" />
+  </form>
+
+  <h1>Upload your URL image</h1>
+  <form
+    action="{{url_for('upload_url', user_name=session['user_name'])}}"
+    method="POST"
+    enctype="multipart/form-data"
+  >
+    <input type="text" name="image_url" placeholder="Add your URL here" />
+    <br />
+    <input type="submit" value="upload" />
+  </form>
 </body>
-</html>
+{% endblock %}

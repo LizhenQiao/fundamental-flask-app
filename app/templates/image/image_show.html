@@ -1,17 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+{% extends "user/user_base.html" %}
+<!--                        -->
+{% block content %}
 <body>
-    <h1>Upload image list</h1>
-    {% if images %}
-        {% for item in images %}
-    <a href="{{ item.image_path }}" ><img src="{{ item.image_path }}" alt="" style="width: 150px; height: 150px;"></a>
-        {% endfor %}
-    {% else %}
-        <p>No image uploaded!</p>
-    {% endif %}
+  <h1>Upload image list</h1>
+  {% if images %} {% for item in images %}
+  <a href="{{ item.image_path }}"
+    ><img
+      src="{{ item.image_path }}"
+      alt=""
+      style="width: 150px; height: 150px"
+  /></a>
+  {% endfor %} {% else %}
+  <p>No image uploaded!</p>
+  {% endif %}
 </body>
-</html>
+{% endblock %}

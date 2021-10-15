@@ -1,20 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Register Form</title>
-  </head>
+{% extends "admin/admin_base.html" %}
+<!--                        -->
+{% block content %}
 
-  <body>
-    <h1>Register</h1>
-    <form action="{{url_for('register', admin_name=admin_name)}}" method="POST">
-      <span>Username</span>
-      <input type="text" name="username" /><br />
-      <span>Password</span>
-      <input type="password" name="password" /><br />
-      <span>Email</span>
-      <input type="text" name="email" /><br />
-      <input type="submit" value="Register" />
-    </form>
-  </body>
-</html>
+<body>
+  <h1>Register</h1>
+  <form action="{{url_for('register', admin_name=admin_name)}}" method="POST">
+    <span>Username</span>
+    <input type="text" name="username" /><br />
+    <span>Password</span>
+    <input type="password" name="password" /><br />
+    <span>Email</span>
+    <input type="text" name="email" /><br />
+    <input type="submit" value="Register" />
+  </form>
+</body>
+{% endblock %}

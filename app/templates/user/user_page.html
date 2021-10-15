@@ -1,26 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>Landing Page</title>
-  </head>
-  <body>
-    <h1>Welcome, {{user_name}}!</h1>
-    <ul>
-      <li>
-        <a href="{{url_for('upload', user_name=user_name)}}">Upload Image</a>
-      </li>
-      <li>
-        <a href="{{url_for('upload_url', user_name=user_name)}}"
-          >Upload Image by URL</a
-        >
-      </li>
-      <li><a href="{{url_for('show', user_name=user_name)}}">Show Image</a></li>
-      <li>
-        <a href="{{url_for('change_pw', user_name=user_name)}}"
-          >Change password</a
-        >
-      </li>
-      <li><a href="{{url_for('user_logout')}}">Logout</a></li>
-    </ul>
-  </body>
-</html>
+{% extends "user/user_base.html" %}
+<!--                        -->
+{% block content %}
+<body>
+  <h1>Welcome, {{user_name}}!</h1>
+  <ul>
+    <li>
+      <a href="{{url_for('upload', user_name=user_name)}}">Upload Image</a>
+    </li>
+    <li>
+      <a href="{{url_for('upload_url', user_name=user_name)}}"
+        >Upload Image by URL</a
+      >
+    </li>
+    <li><a href="{{url_for('show', user_name=user_name)}}">Show Image</a></li>
+    <li>
+      <a href="{{url_for('change_pw', user_name=user_name)}}"
+        >Change password</a
+      >
+    </li>
+    <li><a href="{{url_for('user_logout')}}">Logout</a></li>
+  </ul>
+</body>
+{% endblock %}

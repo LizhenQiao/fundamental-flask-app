@@ -1,3 +1,4 @@
+import re
 from flask import render_template, request, session
 from flask.helpers import url_for
 from flask_mail import Mail, Message
@@ -78,3 +79,8 @@ def reset_password(token):
             return render_template('public/reset_password.html')
     except SignatureExpired:
         return "<h1>The token is expired</h1>"
+
+
+@webapp.route('/test', methods=['GET', 'POST'])
+def aaa():
+    return render_template("user/user_base.html")
