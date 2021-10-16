@@ -4,17 +4,21 @@
 <body>
   <br />
   <div class="container">
-    <table class="table table-bordered">
-      <tr>
-        <th>user_id</th>
-        <th>user_name</th>
-      </tr>
-      {% for user in users %}
-      <tr>
-        <td>{{user[0]}}</td>
-        <td>{{user[1]}}</td>
-      </tr>
-      {% endfor %}
+    <table class="table table-bordered table-hover">
+      <thead>
+        <tr>
+          <th scope="col">user_id</th>
+          <th scope="col">user_name</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+        <tr>
+          <td>{{user[0]}}</td>
+          <td>{{user[1]}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
     </table>
     <form action="{{url_for('delete', admin_name=admin_name)}}" method="POST">
       <div class="mb-3">

@@ -2,17 +2,22 @@
 <!--                        -->
 {% block content %}
 <body>
-  <table class="table table-bordered">
-    <tr>
-      <th>user_id</th>
-      <th>user_name</th>
-    </tr>
-    {% for user in users %}
-    <tr>
-      <td>{{user[0]}}</td>
-      <td>{{user[1]}}</td>
-    </tr>
-    {% endfor %}
+  <table class="table table-bordered table-hover">
+    <thead>
+      <tr>
+        <th scope="col">user_id</th>
+        <th scope="col">user_name</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+      <tr>
+        <td>{{user[0]}}</td>
+        <td>{{user[1]}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
   </table>
   <!-- TODO: Update这里的逻辑稍微有点奇怪，如果按照实际代码逻辑的话应该是让用户输入一个user_id后再弹出让用户设置新用户名或密码的地方 
              不过可以通过加文字提示降低违和感，所以这处不用改了

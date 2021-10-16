@@ -74,11 +74,10 @@ def user_page(user_name):
 
 @webapp.route('/user/<string:user_name>/upload', methods=['GET', 'POST'])
 @login_required
-# 图片大小限制
-# TODO: upload_url出问题了，明天修一下
+# TODO: 图片大小限制
 def upload(user_name):
     if request.method == 'POST':
-        if 'img' in request.files:
+        if request.files['img']:
             f = request.files['img']
             if f and allowed_file(f.filename):
                 available_fname = get_available_filename(f.filename)
@@ -106,7 +105,7 @@ def upload(user_name):
             mysql.connection.commit()
             cursor.close()
             return render_template('user/user_page.html', user_name=session['user_name'])
-        elif 'image_url' in request.files:
+        else:
             url = request.form['image_url']
             if validators.url(url):
                 file = urlparse(url)

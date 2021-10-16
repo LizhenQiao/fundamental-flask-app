@@ -18,6 +18,7 @@ def admin_login():
         query = "SELECT * FROM admins WHERE admin_name=%s"
         cursor.execute(query, (input_adminname,))
         admin = cursor.fetchone()
+        # TODO: 账号错误报错
         if len(admin) > 0:
             if input_password == admin['admin_password']:
                 session['admin_name'] = input_adminname

@@ -11,7 +11,9 @@
     enctype="multipart/form-data"
   >
     <div class="mb-3">
-      <label for="exampleInputEmail1" class="form-label"> Admin name</label>
+      <label for="exampleInputEmail1" class="form-label"
+        >Upload from local file system</label
+      >
       <input
         type="file"
         name="img"
@@ -24,19 +26,11 @@
         >Only 'png', 'jpg', 'bmp' is allowed.</label
       >
     </div>
-    <button type="submit" class="btn btn-primary">Upload</button>
-  </form>
-
-  <form
-    action="{{url_for('upload', user_name=session['user_name'])}}"
-    method="POST"
-    enctype="multipart/form-data"
-  >
     <div class="mb-3">
-      <label for="exampleInputEmail1" class="form-label"> Admin name</label>
+      <label for="exampleInputEmail1" class="form-label">Upload by URL</label>
       <input
         type="text"
-        name="img_url"
+        name="image_url"
         class="form-control"
         id="exampleInputEmail1"
         aria-describedby="emailHelp"

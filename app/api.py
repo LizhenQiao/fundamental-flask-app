@@ -70,7 +70,7 @@ def register_api():
 
 @webapp.route("/api/upload", methods=['POST'])
 def upload_api():
-  # TODO: 暂时没有测试
+  # TODO: 需要看一下输入的形式，是form-data? 是url还是本地图片?
     # upload files. Only available for normal users.
     f = request.files['uploadImage']
     if f and allowed_file(f.filename):
