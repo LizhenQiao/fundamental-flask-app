@@ -2,7 +2,37 @@
 <!--                        -->
 {% block content %}
 <body>
-  <br />
+   <form action="{{url_for('customer_create')}}" method="get">
+        <input type="submit" value="New">
+    </form>
+
+    <table />
+    <thead>
+           <th>ID</th>
+           <th>username</th>
+           <th>Email</th>
+           <th></th>
+
+    </thead>
+    {% for row in cursor %}
+        <tr>
+            <td>{{row[0]}}</td>
+            <td>{{row[1]}}</td>
+            <td>{{row[3]}}</td>
+
+            <td>
+                <form action="{{url_for('customer_edit',id=row[0])}}" method='get'>
+                    <input type='submit' value='Edit' />
+                </form>
+            </td>
+            <td>
+                <form action="{{url_for('customer_delete',id=row[0])}}" method='post' onsubmit='return confirm("Are you sure?")'>
+                    <input type='submit' value='Delete' />
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+  <!--<br />
   <div class="container">
     <table class="table table-bordered">
       <tr>
@@ -31,5 +61,5 @@
       <button type="submit" class="btn btn-primary">Delete</button>
     </form>
   </div>
-</body>
+</body>-->
 {% endblock %}

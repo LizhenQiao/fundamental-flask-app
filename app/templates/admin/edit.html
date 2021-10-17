@@ -2,18 +2,23 @@
 <!--                        -->
 {% block content %}
 <body>
-  <table class="table table-bordered">
-    <tr>
-      <th>user_id</th>
-      <th>user_name</th>
-    </tr>
-    {% for user in users %}
-    <tr>
-      <td>{{user[0]}}</td>
-      <td>{{user[1]}}</td>
-    </tr>
-    {% endfor %}
-  </table>
+<div class='error'>{{error_msg if error_mag != None}}</div>
+
+    <form action='{{url_for('customer_edit_save',id=id)}}' method='post'>
+        <div><input type="submit" value="Save"></div>
+
+        <div>
+        <label>Name</label>
+        <input type='text' name='name' value='{{name if name  != None}}'>
+        </div>
+
+        <div>
+        <label>Email</label>
+        <input type='text' name='email' value='{{email if email  != None}}'>
+        </div>
+
+        <div><input type="submit" value="Save"></div>
+    </form>
   <!-- TODO: Update这里的逻辑稍微有点奇怪，如果按照实际代码逻辑的话应该是让用户输入一个user_id后再弹出让用户设置新用户名或密码的地方 
              不过可以通过加文字提示降低违和感，所以这处不用改了
   -->
