@@ -32,9 +32,7 @@
     <title>Hello, world!</title>
   </head>
   <body>
-    {% for message in get_flashed_messages() %}
-    <div class="flash">{{ message }}</div>
-    {% endfor %} {% include "user/user_navbar.html" %}
+    {% include "user/user_navbar.html" %}
     <br />
     <div class="container">{% block content %}{% endblock %}</div>
 

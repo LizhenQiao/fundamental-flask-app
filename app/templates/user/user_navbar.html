@@ -32,31 +32,31 @@
           <a
             class="nav-link"
             href="{{ url_for('upload', user_name=session['user_name']) }}"
-            >upload</a
+            >Upload</a
           >
         </li>
         <li class="nav-item">
           <a
             class="nav-link"
             href="{{ url_for('show', user_name=session['user_name']) }}"
-            >album</a
+            >Album</a
           >
         </li>
         <li class="nav-item">
           <a
             class="nav-link"
             href="{{ url_for('change_pw', user_name=session['user_name']) }}"
-            >change password</a
+            >Change Password</a
           >
         </li>
         <li class="nav-item">
           <a
             class="nav-link"
             href="{{ url_for('user_logout', user_name=session['user_name']) }}"
-            >logout</a
+            >Logout</a
           >
         </li>
-        <!-- <li class="nav-item dropdown">
+        <!-- <li class="nav-item dropdown"
           <a
             class="nav-link dropdown-toggle"
             href="#"

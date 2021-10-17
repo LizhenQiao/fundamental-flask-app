@@ -2,10 +2,6 @@
 <!--                        -->
 {% block content %}
 <body>
-   <form action="{{url_for('customer_create')}}" method="get">
-        <input type="submit" value="New">
-    </form>
-
     <table />
     <thead>
            <th>ID</th>
@@ -21,12 +17,12 @@
             <td>{{row[3]}}</td>
 
             <td>
-                <form action="{{url_for('customer_edit',id=row[0])}}" method='get'>
+                <form action="{{url_for('edit',user_id=row[0])}}" method='get'>
                     <input type='submit' value='Edit' />
                 </form>
             </td>
             <td>
-                <form action="{{url_for('customer_delete',id=row[0])}}" method='post' onsubmit='return confirm("Are you sure?")'>
+                <form action="{{url_for('delete',user_id=row[0])}}" method='post' onsubmit='return confirm("Are you sure?")'>
                     <input type='submit' value='Delete' />
                 </form>
             </td>
@@ -34,19 +30,23 @@
     {% endfor %}
   <!--<br />
   <div class="container">
-    <table class="table table-bordered">
-      <tr>
-        <th>user_id</th>
-        <th>user_name</th>
-      </tr>
-      {% for user in users %}
-      <tr>
-        <td>{{user[0]}}</td>
-        <td>{{user[1]}}</td>
-      </tr>
-      {% endfor %}
+    <table class="table table-bordered table-hover">
+      <thead>
+        <tr>
+          <th scope="col">user_id</th>
+          <th scope="col">user_name</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+        <tr>
+          <td>{{user[0]}}</td>
+          <td>{{user[1]}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
     </table>
-    <form action="{{url_for('delete', admin_name=admin_name)}}" method="POST">
+    <form action="" method="POST">
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">user_id</label>
         <input

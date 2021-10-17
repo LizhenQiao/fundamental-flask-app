@@ -31,26 +31,19 @@
         <li class="nav-item">
           <a
             class="nav-link"
-            href="{{ url_for('register', admin_name=session['admin_name']) }}"
-            >register</a
+            href="{{ url_for('register')}}"
+            >Register</a
           >
         </li>
         <li class="nav-item">
           <a
             class="nav-link"
-            href="{{ url_for('delete', admin_name=session['admin_name']) }}"
-            >delete</a
+            href="{{ url_for('user_list') }}"
+            >Edit&Delete</a
           >
         </li>
         <li class="nav-item">
-          <a
-            class="nav-link"
-            href="{{ url_for('update', admin_name=session['admin_name']) }}"
-            >update</a
-          >
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('admin_logout') }}">logout</a>
+          <a class="nav-link" href="{{ url_for('admin_logout') }}">Logout</a>
         </li>
         <!-- <li class="nav-item dropdown">
           <a

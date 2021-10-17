@@ -50,14 +50,18 @@ def user_login():
         cursor.execute(query, (input_username,))
         user = cursor.fetchone()
 
-        if len(user) > 0:
+        if user is None:
+            flash('Error password or username, please try again', category='error')
+            return render_template('user/user_login.html')
+        else:
             if bcrypt.hashpw(input_password, user['user_password'].encode(
                     'utf-8')) == user['user_password'].encode('utf-8'):
                 session['user_name'] = input_username
                 session['user_id'] = user['user_id']
                 return redirect(url_for('user_page', user_name=session['user_name']))
             else:
-                return "Error password or username, please contact admin"
+                flash('Error password or username, please try again', category='error')
+                return render_template('user/user_login.html')
     else:
         return render_template('user/user_login.html')
 
@@ -68,17 +72,16 @@ def user_page(user_name):
     if user_name == session['user_name']:
         return render_template('user/user_page.html', user_name=session['user_name'])
     else:
-        flash('url not matched')
+        flash('url not matched', category='error')
         return redirect(url_for('main'))
 
 
 @webapp.route('/user/<string:user_name>/upload', methods=['GET', 'POST'])
 @login_required
-# 图片大小限制
-# TODO: upload_url出问题了，明天修一下
+# TODO: 图片大小限制
 def upload(user_name):
     if request.method == 'POST':
-        if 'img' in request.files:
+        if request.files['img']:
             f = request.files['img']
             if f and allowed_file(f.filename):
                 available_fname = get_available_filename(f.filename)
@@ -94,8 +97,8 @@ def upload(user_name):
                 spread_path = os.path.join(IMAGE_UPLOAD, 'spread_' + fname)
                 transformation(filepath, blur_path, shade_path, spread_path)
             else:
-                flash('Wrong image type')
-                return render_template('user/user_page.html', user_name=session['user_name'])
+                flash('Error:Wrong image type', category='error')
+                return render_template('image/image_upload.html')
             cursor = mysql.connection.cursor()
             query = "INSERT INTO images(image_path, user_id) " \
                     "VALUES (%s, %s)"
@@ -105,8 +108,9 @@ def upload(user_name):
             cursor.execute(query, (spread_img, session['user_id']))
             mysql.connection.commit()
             cursor.close()
-            return render_template('user/user_page.html', user_name=session['user_name'])
-        elif 'image_url' in request.files:
+            flash('Upload by local files Successfully', category='info')
+            return render_template('image/image_upload.html')
+        else:
             url = request.form['image_url']
             if validators.url(url):
                 file = urlparse(url)
@@ -130,10 +134,11 @@ def upload(user_name):
                 cursor.execute(query, (spread_img, session['user_id']))
                 mysql.connection.commit()
                 cursor.close()
-                return render_template('user/user_page.html', user_name=session['user_name'])
+                flash('Upload by URL successfully', category='info')
+                return render_template('image/image_upload.html')
             else:
-                flash('Wrong URL')
-                return render_template('user/user_page.html', user_name=session['user_name'])
+                flash('Error:Wrong URL', category='error')
+                return render_template('image/image_upload.html')
     else:
         return render_template('image/image_upload.html')
 
@@ -170,15 +175,20 @@ def show(user_name):
 @login_required
 def change_pw(user_name):
     if request.method == 'POST':
-        new_password = request.form['new_password'].encode('utf-8')
-        hash_password = bcrypt.hashpw(new_password, bcrypt.gensalt())
-        cursor = mysql.connection.cursor()
-        query = "UPDATE users SET user_password = %s " \
-                "WHERE user_name = %s"
-        cursor.execute(query, (hash_password, session['user_name']))
-        mysql.connection.commit()
-        cursor.close()
-        return render_template('user/user_page.html', user_name=session['user_name'])
+        if request.form['new_password'] == '':
+            flash("Error:Password can't be empty", category='error')
+            return render_template('user/change_pw.html')
+        else:
+            new_password = request.form['new_password'].encode('utf-8')
+            hash_password = bcrypt.hashpw(new_password, bcrypt.gensalt())
+            cursor = mysql.connection.cursor()
+            query = "UPDATE users SET user_password = %s " \
+                    "WHERE user_name = %s"
+            cursor.execute(query, (hash_password, session['user_name']))
+            mysql.connection.commit()
+            cursor.close()
+            flash('Password change Successfully', category='info')
+            return render_template('user/change_pw.html', user_name=session['user_name'])
     elif request.method == 'GET':
         return render_template('user/change_pw.html')
 

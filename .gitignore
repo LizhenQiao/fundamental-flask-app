@@ -22,4 +22,4 @@ yarn-error.log*
 
 venv
 __pycache__
-static/upload
+app/static/upload

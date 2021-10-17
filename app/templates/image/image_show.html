@@ -2,13 +2,15 @@
 <!--                        -->
 {% block content %}
 <body>
-  <h1>Upload image list</h1>
+  <h1>Album</h1>
+  <span>Click to see the original size each picture.</span>
+  <br />
   {% if images %} {% for item in images %}
   <a href="{{ item.image_path }}"
     ><img
       src="{{ item.image_path }}"
       alt=""
-      style="width: 150px; height: 150px"
+      style="width: 150px; height: 150px; border-radius: 20px; margin: 12px"
   /></a>
   {% endfor %} {% else %}
   <p>No image uploaded!</p>

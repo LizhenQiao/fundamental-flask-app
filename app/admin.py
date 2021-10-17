@@ -5,8 +5,6 @@ import bcrypt
 import MySQLdb
 from .utils import admin_required
 
-# TODO: 现在flash好像是失效的，并没有弹窗之类的显示，需要处理一下
-
 
 @webapp.route('/admin', methods=['GET', 'POST'])
 def admin_login():
@@ -18,12 +16,17 @@ def admin_login():
         query = "SELECT * FROM admins WHERE admin_name=%s"
         cursor.execute(query, (input_adminname,))
         admin = cursor.fetchone()
-        if len(admin) > 0:
+
+        if admin is None:
+            flash('Error password or adminname', category='error')
+            return render_template('admin/admin_login.html')
+        else:
             if input_password == admin['admin_password']:
                 session['admin_name'] = input_adminname
                 return redirect(url_for('admin_page', admin_name=session['admin_name']))
             else:
-                return "Error password or adminname"
+                flash('Error password or adminname', category='error')
+                return render_template('admin/admin_login.html')
     else:
         return render_template('admin/admin_login.html')
 
@@ -39,6 +42,9 @@ def admin_page(admin_name):
 def register():
     if request.method == 'POST':
         user_details = request.form
+        if user_details['username'] == "" or user_details['email'] == "" or user_details['password'] == "":
+            flash("Error: Username, Password or Email can't be empty!", category='error')
+            return render_template('admin/register.html')
         username = user_details['username']
         email = user_details['email']
         password = user_details['password'].encode('utf-8')
@@ -50,58 +56,100 @@ def register():
         mysql.connection.commit()
         cursor.close()
         session['user_name'] = username
-        flash('successfully register')
-        return render_template('admin/admin_page.html', username=username)
+        flash('Register Successfully', category='info')
+        return render_template('admin/register.html')
     else:
         return render_template('admin/register.html')
 
 
-@webapp.route('/admin/<string:admin_name>/delete', methods=['GET', 'POST'])
-@admin_required
-# TODO: 有空的话delete和update也可以改成交互式，而不是手工输入userid
-def delete(admin_name):
+@webapp.route('/admin/list', methods=['GET'])
+# Display an HTML list of all users.
+def user_list():
     cursor = mysql.connection.cursor()
-    query1 = "SELECT `user_id`, `user_name` FROM users"
-    cursor.execute(query1)
-    session['users'] = cursor.fetchall()
-    if request.method == 'POST':
-        delete_id = request.form['delete_id']
-        query2 = "DElETE FROM users WHERE user_id = %s"
-        cursor.execute(query2, delete_id)
-        mysql.connection.commit()
-        cursor.close()
-        flash('successfully delete')
-        return render_template('admin/admin_page.html', admin_name=admin_name)
-    elif request.method == 'GET':
-        return render_template('admin/delete.html', users=session['users'], admin_name=admin_name)
+    query = "SELECT * FROM users"
+    cursor.execute(query)
+    return render_template("admin/list.html", cursor=cursor)
 
 
-@webapp.route('/admin/<string:admin_name>/update', methods=['GET', 'POST'])
+@webapp.route('/admin/delete/<int:user_id>', methods=['GET', 'POST'])
 @admin_required
-# TODO: 有空的话delete和update也可以改成交互式，而不是手工输入userid
-def update(admin_name):
+def delete(user_id):
     cursor = mysql.connection.cursor()
-    query1 = "SELECT `user_id`, `user_name` FROM users"
-    cursor.execute(query1)
-    session['users'] = cursor.fetchall()
-    if request.method == 'POST':
-        update_id = request.form['update_id']
-        update_name = request.form['update_name']
-        update_password = request.form['update_password'].encode('utf-8')
-        hash_password = bcrypt.hashpw(update_password, bcrypt.gensalt())
+    query = "DELETE FROM users WHERE user_id = %s"
+    cursor.execute(query, (user_id,))
+    mysql.connection.commit()
+    return redirect(url_for('user_list'))
+
+    # cursor = mysql.connection.cursor()
+    # query1 = "SELECT `user_id`, `user_name` FROM users"
+    # cursor.execute(query1)
+    # session['users'] = cursor.fetchall()
+    # if request.method == 'POST':
+    #     delete_id = request.form['delete_id']
+    #     query2 = "DElETE FROM users WHERE user_id = %s"
+    #     cursor.execute(query2, delete_id)
+    #     mysql.connection.commit()
+    #     cursor.close()
+    #     flash('successfully delete')
+    #     return render_template('admin/admin_page.html', admin_name=admin_name)
+    # elif request.method == 'GET':
+    #     return render_template('admin/delete.html', users=session['users'], admin_name=admin_name)
+
+
+@webapp.route('/admin/edit/<int:user_id>', methods=['GET'])
+@admin_required
+def edit(user_id):
+    cursor = mysql.connection.cursor()
+    query = "SELECT * FROM users WHERE user_id = %s"
+    cursor.execute(query, (user_id,))
+    row = cursor.fetchone()
+    user_id = row[0]
+    name = row[1]
+    email = row[3]
+
+    return render_template("admin/edit.html", user_id=user_id, name=name, email=email)
+
+
+@webapp.route('/admin/edit/<int:user_id>', methods=['POST'])
+def edit_save(user_id):
+    name = request.form.get('name', "")
+    email = request.form.get('email', "")
+
+    if name == "" or email == "":
+        flash("Error: All fields are required!", category='error')
+        return render_template("admin/edit.html", user_id=user_id, name=name, email=email)
+    else:
         cursor = mysql.connection.cursor()
-        query1 = "UPDATE users SET user_name = %s, user_password = %s " \
-                 "WHERE user_id = %s"
-        cursor.execute(query1, (update_name, hash_password, update_id))
+        query = "UPDATE users SET user_name=%s, user_email=%s " \
+                "WHERE user_id = %s"
+
+        cursor.execute(query, (name, email, user_id))
         mysql.connection.commit()
-        query2 = "SELECT `user_id`, `user_name` FROM users"
-        cursor.execute(query2)
-        session['users'] = cursor.fetchall()
-        cursor.close()
-        flash('successfully update')
-        return render_template('admin/admin_page.html', admin_name=admin_name)
-    elif request.method == 'GET':
-        return render_template('admin/update.html', users=session['users'], admin_name=admin_name)
+
+        return redirect(url_for('user_list'))
+
+    # cursor = mysql.connection.cursor()
+    # query1 = "SELECT `user_id`, `user_name` FROM users"
+    # cursor.execute(query1)
+    # session['users'] = cursor.fetchall()
+    # if request.method == 'POST':
+    #     update_id = request.form['update_id']
+    #     update_name = request.form['update_name']
+    #     update_password = request.form['update_password'].encode('utf-8')
+    #     hash_password = bcrypt.hashpw(update_password, bcrypt.gensalt())
+    #     cursor = mysql.connection.cursor()
+    #     query1 = "UPDATE users SET user_name = %s, user_password = %s " \
+    #              "WHERE user_id = %s"
+    #     cursor.execute(query1, (update_name, hash_password, update_id))
+    #     mysql.connection.commit()
+    #     query2 = "SELECT `user_id`, `user_name` FROM users"
+    #     cursor.execute(query2)
+    #     session['users'] = cursor.fetchall()
+    #     cursor.close()
+    #     flash('successfully update')
+    #     return render_template('admin/admin_page.html', admin_name=admin_name)
+    # elif request.method == 'GET':
+    #     return render_template('admin/update.html', users=session['users'], admin_name=admin_name)
 
 
 @webapp.route('/admin/logout', methods=['GET', 'POST'])
