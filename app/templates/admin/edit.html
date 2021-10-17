@@ -27,72 +27,19 @@
     <button type="submit" class="btn btn-primary">Save</button>
   </form>
 
-  {% with messages = get_flashed_messages(with_categories=true) %} {% if
-  messages %}
-  <ul class="flashes">
-    {% for category, message in messages %} {% if category =='error'%}
-    <li style="color: red">{{ message }}</li>
-    {% else %}
-    <li style="color: green">{{ message }}</li>
-    {% endif %} {% endfor %}
-  </ul>
-  {% endif %} {% endwith %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class=flashes>
+                {% for category, message in messages %}
+                    {% if category =='error'%}
+                        <li style="color:red">{{ message }}</li>
+                    {% else %}
+                        <li style="color:green">{{ message }}</li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
 
-  <!--<table class="table table-bordered table-hover">
-    <thead>
-      <tr>
-        <th scope="col">user_id</th>
-        <th scope="col">user_name</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for user in users %}
-      <tr>
-        <td>{{user[0]}}</td>
-        <td>{{user[1]}}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>-->
-
-  <!--<div class="container">
-    <h1>Edit</h1>
-
-    <form action="" method="POST">
-      <div class="mb-3">
-        <label for="exampleInputEmail1" class="form-label">user_id</label>
-        <input
-          type="text"
-          name="update_id"
-          class="form-control"
-          id="exampleInputEmail1"
-          aria-describedby="emailHelp"
-        />
-        <div class="form-text">
-          Please input the user_id of the account you want to update and then
-          input new username and password below.
-        </div>
-      </div>
-      <div class="mb-3">
-        <label for="exampleInputPassword1" class="form-label">username</label>
-        <input
-          type="text"
-          name="update_name"
-          class="form-control"
-          id="exampleInputPassword1"
-        />
-      </div>
-      <div class="mb-3">
-        <label for="exampleInputPassword1" class="form-label">password</label>
-        <input
-          type="password"
-          name="update_password"
-          class="form-control"
-          id="exampleInputPassword1"
-        />
-      </div>
-      <button type="submit" class="btn btn-primary">Update</button>
-    </form>
-  </div>-->
 </body>
 {% endblock %}

@@ -1,71 +1,36 @@
 {% extends "admin/admin_base.html" %}
 <!--                        -->
 {% block title %} edit {% endblock %} {% block content %}
-<body>
-  <table class="table table-border">
-    <thead>
-      <th>ID</th>
-      <th>Username</th>
-      <th>Email</th>
-      <th>Edit</th>
-      <th>Delete</th>
-    </thead>
-    {% for row in cursor %}
-    <tr>
-      <td>{{row[0]}}</td>
-      <td>{{row[1]}}</td>
-      <td>{{row[3]}}</td>
+<table class="table table-border">
+  <thead>
+    <th>ID</th>
+    <th>Username</th>
+    <th>Email</th>
+    <th>Edit</th>
+    <th>Delete</th>
+  </thead>
+  {% for row in cursor %}
+  <tr>
+    <td>{{row[0]}}</td>
+    <td>{{row[1]}}</td>
+    <td>{{row[3]}}</td>
 
-      <td>
-        <form action="{{url_for('edit',user_id=row[0])}}" method="get">
-          <button type="submit" class="btn btn-primary">Edit</button>
-        </form>
-      </td>
-      <td>
-        <form
-          action="{{url_for('delete',user_id=row[0])}}"
-          method="post"
-          onsubmit='return confirm("Are you sure?")'
-        >
-          <button type="submit" class="btn btn-primary">Delete</button>
-        </form>
-      </td>
-    </tr>
-    {% endfor %}
-  </table>
-  <!--<br />
-  <div class="container">
-    <table class="table table-bordered table-hover">
-      <thead>
-        <tr>
-          <th scope="col">user_id</th>
-          <th scope="col">user_name</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for user in users %}
-        <tr>
-          <td>{{user[0]}}</td>
-          <td>{{user[1]}}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    <form action="" method="POST">
-      <div class="mb-3">
-        <label for="exampleInputEmail1" class="form-label">user_id</label>
-        <input
-          type="text"
-          name="delete_id"
-          class="form-control"
-          id="exampleInputEmail1"
-          aria-describedby="emailHelp"
-        />
-        <div class="form-text">Please input the account with its user_id.</div>
-      </div>
-      <button type="submit" class="btn btn-primary">Delete</button>
-    </form>
-  </div>
-</body>-->
-  {% endblock %}
-</body>
+    <td>
+      <form action="{{url_for('edit',user_id=row[0])}}" method="get">
+        <button type="submit" class="btn btn-primary">Edit</button>
+      </form>
+    </td>
+    <td>
+      <form
+        action="{{url_for('delete',user_id=row[0])}}"
+        method="post"
+        onsubmit='return confirm("Are you sure?")'
+      >
+        <button type="submit" class="btn btn-primary">Delete</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+{% endblock %}

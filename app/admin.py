@@ -80,20 +80,6 @@ def delete(user_id):
     mysql.connection.commit()
     return redirect(url_for('user_list'))
 
-    # cursor = mysql.connection.cursor()
-    # query1 = "SELECT `user_id`, `user_name` FROM users"
-    # cursor.execute(query1)
-    # session['users'] = cursor.fetchall()
-    # if request.method == 'POST':
-    #     delete_id = request.form['delete_id']
-    #     query2 = "DElETE FROM users WHERE user_id = %s"
-    #     cursor.execute(query2, delete_id)
-    #     mysql.connection.commit()
-    #     cursor.close()
-    #     flash('successfully delete')
-    #     return render_template('admin/admin_page.html', admin_name=admin_name)
-    # elif request.method == 'GET':
-    #     return render_template('admin/delete.html', users=session['users'], admin_name=admin_name)
 
 
 @webapp.route('/admin/edit/<int:user_id>', methods=['GET'])
@@ -128,28 +114,6 @@ def edit_save(user_id):
 
         return redirect(url_for('user_list'))
 
-    # cursor = mysql.connection.cursor()
-    # query1 = "SELECT `user_id`, `user_name` FROM users"
-    # cursor.execute(query1)
-    # session['users'] = cursor.fetchall()
-    # if request.method == 'POST':
-    #     update_id = request.form['update_id']
-    #     update_name = request.form['update_name']
-    #     update_password = request.form['update_password'].encode('utf-8')
-    #     hash_password = bcrypt.hashpw(update_password, bcrypt.gensalt())
-    #     cursor = mysql.connection.cursor()
-    #     query1 = "UPDATE users SET user_name = %s, user_password = %s " \
-    #              "WHERE user_id = %s"
-    #     cursor.execute(query1, (update_name, hash_password, update_id))
-    #     mysql.connection.commit()
-    #     query2 = "SELECT `user_id`, `user_name` FROM users"
-    #     cursor.execute(query2)
-    #     session['users'] = cursor.fetchall()
-    #     cursor.close()
-    #     flash('successfully update')
-    #     return render_template('admin/admin_page.html', admin_name=admin_name)
-    # elif request.method == 'GET':
-    #     return render_template('admin/update.html', users=session['users'], admin_name=admin_name)
 
 
 @webapp.route('/admin/logout', methods=['GET', 'POST'])

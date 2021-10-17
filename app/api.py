@@ -51,6 +51,14 @@ def register_api():
     # Add new user accounts. Only available for admin.
     try:
         data = request.get_json()
+        if data['username'] == "" or data['email'] == "" or data['password'] == "":
+            return jsonify({
+                "success": False,
+                "error": {
+                    "code": 500,
+                    "message": "Username, Password or Email can't be empty!"
+                }
+            })
         username = data['username']
         email = data['email'] if 'email' in data else ''
         password = data['password'].encode('utf-8')
@@ -65,7 +73,13 @@ def register_api():
     except Exception as e:
         # TODO: 在接口获取错误码
         print(e)
-        return jsonify({"success": False, "error": ''})
+        return jsonify({
+            "success": False,
+            "error": {
+                "code": 500,
+                "message": "Internal Server Error!"
+            }
+        })
 
 
 @webapp.route("/api/upload", methods=['POST'])
@@ -79,6 +93,7 @@ def upload_api():
         image = '/static/upload/{}'.format(fname)
         filepath = os.path.join(IMAGE_UPLOAD, fname)
         f.save(filepath)
+        file_size = os.stat(filepath).st_size
         blur_img = '/static/upload/blur_{}'.format(fname)
         shade_img = '/static/upload/shade_{}'.format(fname)
         spread_img = '/static/upload/spread_{}'.format(fname)
@@ -86,6 +101,9 @@ def upload_api():
         shade_path = os.path.join(IMAGE_UPLOAD, 'shade_' + fname)
         spread_path = os.path.join(IMAGE_UPLOAD, 'spread_' + fname)
         transformation(filepath, blur_path, shade_path, spread_path)
+        blur_size = os.stat(blur_path).st_size
+        shade_size = os.stat(shade_path).st_size
+        spread_size = os.stat(spread_path).st_size
     else:
         print('Unavailable image type.')
         return jsonify({"success": False, "error": "Unavailable image type."})
@@ -102,9 +120,9 @@ def upload_api():
     return jsonify({
         "success": True,
         "payload": {
-            "original_size": 1,
-            "blur_size": 1,
-            "shade_size": 1,
-            "spread_size": 1
+            "original_size": file_size,
+            "blur_size": blur_size,
+            "shade_size": shade_size,
+            "spread_size": spread_size
         }
     })
