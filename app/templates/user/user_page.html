@@ -1,11 +1,10 @@
 {% extends "user/user_base.html" %}
 <!--                        -->
-{% block content %}
+{% block title %} Home {% endblock %} {% block content %}
 <body>
   <h1>Welcome, {{user_name}}!</h1>
-  <br />
-  <br />
-  <h3>Readme</h3>
+  <div style="height: 75px"></div>
+  <div></div>
   <div class="accordion" id="accordionPanelsStayOpenExample">
     <div class="accordion-item">
       <h2 class="accordion-header" id="panelsStayOpen-headingOne">
@@ -17,7 +16,7 @@
           aria-expanded="true"
           aria-controls="panelsStayOpen-collapseOne"
         >
-          Upload Image
+          Functions of normal users
         </button>
       </h2>
       <div
@@ -26,88 +25,22 @@
         aria-labelledby="panelsStayOpen-headingOne"
       >
         <div class="accordion-body">
-          <strong>This is the first item's accordion body.</strong> It is shown
-          by default, until the collapse plugin adds the appropriate classes
-          that we use to style each element. These classes control the overall
-          appearance, as well as the showing and hiding via CSS transitions. You
-          can modify any of this with custom CSS or overriding our default
-          variables. It's also worth noting that just about any HTML can go
-          within the <code>.accordion-body</code>, though the transition does
-          limit overflow.
+          <strong
+            >you can access all the functions by clicking the navigation bar at
+            the top of the page. <br
+          /></strong>
+          <strong>- Home:</strong> redirect to homepage. <br />
+          <strong>- Upload:</strong> you could upload images either by typing in
+          an accessable URL or choosing from your local files. <br />
+          <strong>- Album:</strong> you could view all your images and related
+          images transformed here. <br />
+          <strong>- Change Password:</strong> you could change password of the
+          account you are currently login. <br />
+          <strong>- Logout:</strong> you could logout the account and redirect
+          to the entrance page by clicking Logout. <br />
         </div>
       </div>
     </div>
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
-        <button
-          class="accordion-button collapsed"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#panelsStayOpen-collapseTwo"
-          aria-expanded="false"
-          aria-controls="panelsStayOpen-collapseTwo"
-        >
-          Show Image
-        </button>
-      </h2>
-      <div
-        id="panelsStayOpen-collapseTwo"
-        class="accordion-collapse collapse"
-        aria-labelledby="panelsStayOpen-headingTwo"
-      >
-        <div class="accordion-body">
-          <strong>This is the second item's accordion body.</strong> It is
-          hidden by default, until the collapse plugin adds the appropriate
-          classes that we use to style each element. These classes control the
-          overall appearance, as well as the showing and hiding via CSS
-          transitions. You can modify any of this with custom CSS or overriding
-          our default variables. It's also worth noting that just about any HTML
-          can go within the <code>.accordion-body</code>, though the transition
-          does limit overflow.
-        </div>
-      </div>
-    </div>
-    <div class="accordion-item">
-      <h2 class="accordion-header" id="panelsStayOpen-headingThree">
-        <button
-          class="accordion-button collapsed"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#panelsStayOpen-collapseThree"
-          aria-expanded="false"
-          aria-controls="panelsStayOpen-collapseThree"
-        >
-          Change Password
-        </button>
-      </h2>
-      <div
-        id="panelsStayOpen-collapseThree"
-        class="accordion-collapse collapse"
-        aria-labelledby="panelsStayOpen-headingThree"
-      >
-        <div class="accordion-body">
-          <strong>This is the third item's accordion body.</strong> It is hidden
-          by default, until the collapse plugin adds the appropriate classes
-          that we use to style each element. These classes control the overall
-          appearance, as well as the showing and hiding via CSS transitions. You
-          can modify any of this with custom CSS or overriding our default
-          variables. It's also worth noting that just about any HTML can go
-          within the <code>.accordion-body</code>, though the transition does
-          limit overflow.
-        </div>
-      </div>
-    </div>
-  <ul>
-    <li>
-      <a href="{{url_for('upload', user_name=user_name)}}">Upload Image</a>
-    </li>
-    <li><a href="{{url_for('show', user_name=user_name)}}">Show Image</a></li>
-    <li>
-      <a href="{{url_for('change_pw', user_name=user_name)}}"
-        >Change password</a
-      >
-    </li>
-    <li><a href="{{url_for('user_logout')}}">Logout</a></li>
-  </ul>
+  </div>
 </body>
 {% endblock %}

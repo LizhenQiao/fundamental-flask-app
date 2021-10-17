@@ -1,33 +1,38 @@
 {% extends "admin/admin_base.html" %}
 <!--                        -->
-{% block content %}
+{% block title %} edit {% endblock %} {% block content %}
 <body>
-    <table />
+  <table class="table table-border">
     <thead>
-           <th>ID</th>
-           <th>username</th>
-           <th>Email</th>
-           <th></th>
-
+      <th>ID</th>
+      <th>Username</th>
+      <th>Email</th>
+      <th>Edit</th>
+      <th>Delete</th>
     </thead>
     {% for row in cursor %}
-        <tr>
-            <td>{{row[0]}}</td>
-            <td>{{row[1]}}</td>
-            <td>{{row[3]}}</td>
+    <tr>
+      <td>{{row[0]}}</td>
+      <td>{{row[1]}}</td>
+      <td>{{row[3]}}</td>
 
-            <td>
-                <form action="{{url_for('edit',user_id=row[0])}}" method='get'>
-                    <input type='submit' value='Edit' />
-                </form>
-            </td>
-            <td>
-                <form action="{{url_for('delete',user_id=row[0])}}" method='post' onsubmit='return confirm("Are you sure?")'>
-                    <input type='submit' value='Delete' />
-                </form>
-            </td>
-        </tr>
+      <td>
+        <form action="{{url_for('edit',user_id=row[0])}}" method="get">
+          <button type="submit" class="btn btn-primary">Edit</button>
+        </form>
+      </td>
+      <td>
+        <form
+          action="{{url_for('delete',user_id=row[0])}}"
+          method="post"
+          onsubmit='return confirm("Are you sure?")'
+        >
+          <button type="submit" class="btn btn-primary">Delete</button>
+        </form>
+      </td>
+    </tr>
     {% endfor %}
+  </table>
   <!--<br />
   <div class="container">
     <table class="table table-bordered table-hover">
@@ -62,4 +67,5 @@
     </form>
   </div>
 </body>-->
-{% endblock %}
+  {% endblock %}
+</body>

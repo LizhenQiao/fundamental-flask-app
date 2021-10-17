@@ -1,35 +1,42 @@
 {% extends "admin/admin_base.html" %}
 <!--                        -->
-{% block content %}
+{% block title %} edit {% endblock %} {% block content %}
 <body>
+  <form action="{{url_for('edit_save',user_id=user_id)}}" method="POST">
+    <div class="mb-3">
+      <label for="exampleInputEmail1" class="form-label">Name</label>
+      <input
+        type="text"
+        name="name"
+        class="form-control"
+        id="exampleInputEmail1"
+        aria-describedby="emailHelp"
+        value="{{name if name  != None}}"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="exampleInputPassword1" class="form-label">Email</label>
+      <input
+        type="text"
+        name="email"
+        class="form-control"
+        id="exampleInputPassword1"
+        value="{{email if email  != None}}"
+      />
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+  </form>
 
-    <form action='{{url_for('edit_save',user_id=user_id)}}' method='post'>
-        <div>
-        <label>Name</label>
-        <input type='text' name='name' value='{{name if name  != None}}'>
-        </div>
-
-        <div>
-        <label>Email</label>
-        <input type='text' name='email' value='{{email if email  != None}}'>
-        </div>
-
-        <div><input type="submit" value="Save"></div>
-    </form>
-
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <ul class=flashes>
-                {% for category, message in messages %}
-                    {% if category =='error'%}
-                        <li style="color:red">{{ message }}</li>
-                    {% else %}
-                        <li style="color:green">{{ message }}</li>
-                    {% endif %}
-                {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
+  {% with messages = get_flashed_messages(with_categories=true) %} {% if
+  messages %}
+  <ul class="flashes">
+    {% for category, message in messages %} {% if category =='error'%}
+    <li style="color: red">{{ message }}</li>
+    {% else %}
+    <li style="color: green">{{ message }}</li>
+    {% endif %} {% endfor %}
+  </ul>
+  {% endif %} {% endwith %}
 
   <!--<table class="table table-bordered table-hover">
     <thead>
@@ -47,7 +54,6 @@
       {% endfor %}
     </tbody>
   </table>-->
-
 
   <!--<div class="container">
     <h1>Edit</h1>

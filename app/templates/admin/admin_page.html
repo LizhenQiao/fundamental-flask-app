@@ -1,14 +1,46 @@
 {% extends "admin/admin_base.html" %}
 <!--                        -->
-{% block content %}
+{% block title %} home {% endblock %} {% block content %}
 <body>
   <h1>Welcome, {{admin_name}}!</h1>
-  <ul>
-    <li>
-      <a href="{{url_for('register', admin_name=admin_name)}}">Register</a>
-    </li>
-    <li><a href="{{url_for('user_list')}}">Edit&Delete</a></li>
-    <li><a href="{{url_for('admin_logout')}}">Logout</a></li>
-  </ul>
+  <div style="height: 75px"></div>
+  <div></div>
+  <div class="accordion" id="accordionPanelsStayOpenExample">
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+        <button
+          class="accordion-button"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#panelsStayOpen-collapseOne"
+          aria-expanded="true"
+          aria-controls="panelsStayOpen-collapseOne"
+        >
+          Functions of admins
+        </button>
+      </h2>
+      <div
+        id="panelsStayOpen-collapseOne"
+        class="accordion-collapse collapse show"
+        aria-labelledby="panelsStayOpen-headingOne"
+      >
+        <div class="accordion-body">
+          <strong
+            >you can access all the functions by clicking the navigation bar at
+            the top of the page.</strong
+          >
+          <strong>- Home:</strong> redirect to homepage. <br />
+
+          <strong>- Register:</strong> you could add new accounts of normal
+          users here by typing in <code>Username</code>,
+          <code>Password</code> and <code>Email</code><br />
+          <strong>- Edit&Delete:</strong> you could delete or edit the name and
+          password of normal user accounts here. <br />
+          <strong>- Logout:</strong> you could logout the account and redirect
+          to the entrance page by clicking Logout. <br />
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 {% endblock %}
