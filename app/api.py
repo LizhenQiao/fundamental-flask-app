@@ -51,12 +51,12 @@ def register_api():
     # Add new user accounts. Only available for admin.
     try:
         data = request.get_json()
-        if data['username'] == "" or data['email'] == "" or data['password'] == "":
+        if data['username'] == "" or data['password'] == "":
             return jsonify({
                 "success": False,
                 "error": {
-                    "code": 500,
-                    "message": "Username, Password or Email can't be empty!"
+                    "code": 10000,
+                    "message": "Invalid input: Username, Password or Email can't be empty!"
                 }
             })
         username = data['username']
@@ -71,7 +71,6 @@ def register_api():
         cur.close()
         return jsonify({"success": True})
     except Exception as e:
-        # TODO: 在接口获取错误码
         print(e)
         return jsonify({
             "success": False,
@@ -84,45 +83,81 @@ def register_api():
 
 @webapp.route("/api/upload", methods=['POST'])
 def upload_api():
-  # TODO: 需要看一下输入的形式，是form-data? 是url还是本地图片?
     # upload files. Only available for normal users.
-    f = request.files['uploadImage']
-    if f and allowed_file(f.filename):
-        available_fname = get_available_filename(f.filename)
-        fname = secure_filename(available_fname)
-        image = '/static/upload/{}'.format(fname)
-        filepath = os.path.join(IMAGE_UPLOAD, fname)
-        f.save(filepath)
-        file_size = os.stat(filepath).st_size
-        blur_img = '/static/upload/blur_{}'.format(fname)
-        shade_img = '/static/upload/shade_{}'.format(fname)
-        spread_img = '/static/upload/spread_{}'.format(fname)
-        blur_path = os.path.join(IMAGE_UPLOAD, 'blur_' + fname)
-        shade_path = os.path.join(IMAGE_UPLOAD, 'shade_' + fname)
-        spread_path = os.path.join(IMAGE_UPLOAD, 'spread_' + fname)
-        transformation(filepath, blur_path, shade_path, spread_path)
-        blur_size = os.stat(blur_path).st_size
-        shade_size = os.stat(shade_path).st_size
-        spread_size = os.stat(spread_path).st_size
-    else:
-        print('Unavailable image type.')
-        return jsonify({"success": False, "error": "Unavailable image type."})
-    cursor = mysql.connection.cursor()
-    query = "INSERT INTO image(image_path, user_id) " \
-            "VALUES (%s, %s)"
-    cursor.execute(query, (image, 1))
-    cursor.execute(query, (blur_img, 1))
-    cursor.execute(query, (shade_img, 1))
-    cursor.execute(query, (spread_img, 1))
-    mysql.connection.commit()
-    cursor.close()
-    # TODO: 怎么获取到这些图片的size, original_size印象中form-data里有可能取得到
-    return jsonify({
-        "success": True,
-        "payload": {
-            "original_size": file_size,
-            "blur_size": blur_size,
-            "shade_size": shade_size,
-            "spread_size": spread_size
-        }
-    })
+    try:
+        f = request.files['file']
+        name = request.form['name']
+        input_password = request.form['password'].encode('utf-8')
+        if f and allowed_file(f.filename):
+            available_fname = get_available_filename(f.filename)
+            fname = secure_filename(available_fname)
+            image = '/static/upload/{}'.format(fname)
+            filepath = os.path.join(IMAGE_UPLOAD, fname)
+            f.save(filepath)
+            file_size = os.stat(filepath).st_size
+            blur_img = '/static/upload/blur_{}'.format(fname)
+            shade_img = '/static/upload/shade_{}'.format(fname)
+            spread_img = '/static/upload/spread_{}'.format(fname)
+            blur_path = os.path.join(IMAGE_UPLOAD, 'blur_' + fname)
+            shade_path = os.path.join(IMAGE_UPLOAD, 'shade_' + fname)
+            spread_path = os.path.join(IMAGE_UPLOAD, 'spread_' + fname)
+            transformation(filepath, blur_path, shade_path, spread_path)
+            blur_size = os.stat(blur_path).st_size
+            shade_size = os.stat(shade_path).st_size
+            spread_size = os.stat(spread_path).st_size
+        else:
+            print('Unavailable image type.')
+            return jsonify({"success": False, "error": {
+                "code": 10000,
+                "message": "Unavailable image format."
+            }})
+        cursor0 = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        query = "SELECT * FROM users WHERE user_name=%s"
+        cursor0.execute(query, (name,))
+        user = cursor0.fetchone()
+        try:
+            if bcrypt.hashpw(input_password, user['user_password'].encode(
+                    'utf-8')) == user['user_password'].encode('utf-8'):
+                user_id = user["user_id"]
+            else:
+                return jsonify({
+                    "success": False,
+                    "error": {
+                        "code": 10002,
+                        "message": "Password or username wrong."
+                    }
+                })
+        except:
+            return jsonify({
+                "success": False,
+                "error": {
+                    "code": 10002,
+                    "message": "Password or username wrong."
+                }
+            })
+        cursor = mysql.connection.cursor()
+        query = "INSERT INTO images(image_path, user_id) " \
+                "VALUES (%s, %s)"
+        cursor.execute(query, (image, user_id))
+        cursor.execute(query, (blur_img, user_id))
+        cursor.execute(query, (shade_img, user_id))
+        cursor.execute(query, (spread_img, user_id))
+        mysql.connection.commit()
+        cursor.close()
+        return jsonify({
+            "success": True,
+            "payload": {
+                "original_size": file_size,
+                "blur_size": blur_size,
+                "shade_size": shade_size,
+                "spread_size": spread_size
+            }
+        })
+    except:
+        return jsonify({
+            "success": False,
+            "error": {
+                "code": 500,
+                "message": "Internal Server Error!"
+            }
+        })
