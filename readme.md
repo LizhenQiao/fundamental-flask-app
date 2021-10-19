@@ -1,11 +1,10 @@
-<h1 align="center">Documentation</h1>
+<h1 align="center">Readme of the project1</h1>
 
 ----
 - [Anouncement](#anouncement)
 - [important information for test](#important-information-for-test)
 - [Introduction - how to use the web application](#introduction)
   - [Start](#start) 
-  - [user account needed for our application](#accounts)
   - [Architecture](#architecture)
   - [Database](#database)
 - [User Tutorial - how to access each module of the application](#user-tutorial)
@@ -16,6 +15,7 @@
 - [Developer Tutorial](#developer-tutorial)
   - [Initialize Project](#initialize-project)
   - [Tech Stack](#tech-stack)
+  - [Appendix](#appendix)
 
 <br />
 
@@ -31,9 +31,13 @@ We have accomplished all the functions required for the project, including hash 
 
 - We made a [video(click to watch)](https://www.bilibili.com/video/BV1944y1x7xn/) about our application and each page of it which goes into more details. If there is still anything unclear, please contact us at [lizhenqiao@mail.utoronto.ca](mailto:lizhenqiao@mail.utoronto.ca), we will respond as soon as possible. Or we could make an appointment to test our application as well.
 <br />
+
 - credentials and .pem are uploaded in the folder.
+
 <br />
+
 - Quickstart of the application
+
 At the **root path**, you are supposed to find a script called \"start\. sh\". This script will establish the virtual environment, prepare you with all the dependencies, and run on the server. Use the command below to run the project.
 
 ```
@@ -45,6 +49,7 @@ At the **root path**, you are supposed to find a script called \"start\. sh\". T
 Inorder to test the application, you might need some accounts for our application.
 
 > Admin Accounts:  adminname: admin1, password: admin1
+
 > User Accounts: username: test1, password: test1
 
 You can register User account in the register section of admin page.
@@ -75,20 +80,6 @@ A web application for storing and browsing photographs.
 <br />
 <br />
 
-## Accounts
-user account needed for our application
-
-Inorder to test the application, you might need some accounts for our application.
-
-> Admin Accounts:  adminname: admin1, password: admin1
-> User Accounts: username: test1, password: test1
-
-You can register User account in the register section of admin page.
-You can register new admin account by manipulating the TABLE #admins# in MySQL.
-
-<br />
-<br />
-
 ## Architecture
 
 
@@ -100,7 +91,7 @@ Since most of our data are structured, we tend to use `MySQL` to store all our d
 ### Version 1.0 (Current version)
 <div style="display: flex; justify-content: flex-start">
   <div>
-    <img src="./static/architecture_1.png" style="width: 300px"></img>
+    <img src="./static/architecture_1.png" style="width: 200px"></img>
   </div>
   <div style="margin-left: 30px; width: 400px">
     The architechture of our version1.0 project basically looks like this. We have a app folder which contains main content of our flask app. We divided this folder by the functions of each part as admin, user and so on. Except for app folder, we have several files related to version control and project co-working, and a file related to code-format-checking.
@@ -112,7 +103,7 @@ Since most of our data are structured, we tend to use `MySQL` to store all our d
 ### Version 2.0 (Developing version)
 <div style="display: flex; justify-content: flex-start">
     <div>
-      <img src="./static/architecture_2.png" style="width: 300px"></img>
+      <img src="./static/architecture_2.png" style="width: 200px"></img>
     </div>
     <div style="margin-left: 30px; width: 400px">
       We use react.js as front-end in this version because React.js could provide user with more friendly interaction, more beautiful UI, and more powerful functions. You could find more in the video we recorded.
@@ -134,7 +125,7 @@ Our database is based on MySQL which could deal with the syntactic reading and w
 
 
 # User Tutorial 
-## Entrance
+## 1.Entrance
 **Entrance page** is the first page you will see. There is a readme which explains the functions of the three part right in the webpage. 
 <img src="./static/homepage.png" style="width: 100%;"></img>
 - **User Login** <br />
@@ -161,7 +152,7 @@ After login, you can access all the functions by clicking the navigation bar at 
 
 
 
-## normal user
+## 2. Normal User
 After login as normal user, you would see the homepage of normal user shown as the picture below.
 
 <img src="./static/userhomepage.png" style="width: 100%;"></img>
@@ -175,7 +166,7 @@ After login as normal user, you would see the homepage of normal user shown as t
 <br />
 
 
-## admin
+## 3. Admin
 After login as admin, you would see the homepage of admin shown as the picture below.
 
 <img src="./static/adminhomepage.png" style="width: 100%;"></img>
@@ -188,7 +179,7 @@ the top of the page.</strong><br />
 <strong>- Logout:</strong> you could logout the account and redirect to the entrance page by clicking Logout. <br />
 <br />
 
-## password recovery
+## 4. Password Recovery
 <strong>If you cannot recall your password, please click <code>PasswordRecovery</code></strong>
 You would be asked to input the username of your account. An email will be sent to the email address attached to your account for you to reset the password.
 <img src="./static/passwordrecoverypage.png" style="width: 100%;"></img>
@@ -227,3 +218,11 @@ You would be asked to input the username of your account. An email will be sent 
 
 > You could see the details of all the dependencies at "requirements.txt"
 
+### Appendix
+- [Flask](https://flask.palletsprojects.com/en/2.0.x/)
+- [python](https://www.python.org/)
+- [React.js](https://reactjs.org/)
+- [pre-commit](https://pre-commit.com/)
+- [flask-mail](https://pythonhosted.org/Flask-Mail/)
+- [bcrypt](https://pypi.org/project/bcrypt/)
+- [imagemagick](https://imagemagick.org/index.php)
