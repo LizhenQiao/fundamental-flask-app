@@ -25,18 +25,18 @@ In this document, we will explain the important parts of our application and int
 
 We have accomplished all the functions required for the project, including hash the password, limit of the upload image, rename the image if have a repetition conflict, exception handling and so on. Considering that they are not complicated and can be mostly solved by using third-party libraries, this documentation will not go into details of the implementation of them. Besides, we will attach our code anyway.
 
-<br />
+<!-- <br /> -->
 
 # important information for test
 
-- We made a [video(click to watch)](https://www.bilibili.com/video/BV1944y1x7xn/) about our application and each page of it which goes into more details. If there is still anything unclear, please contact us at [lizhenqiao@mail.utoronto.ca](mailto:lizhenqiao@mail.utoronto.ca), we will respond as soon as possible. Or we could make an appointment to test our application as well.
-<br />
+1. We made a [video(click to watch)](https://www.bilibili.com/video/BV1944y1x7xn/) about our application and each page of it which goes into more details. If there is still anything unclear, please contact us at [lizhenqiao@mail.utoronto.ca](mailto:lizhenqiao@mail.utoronto.ca), we will respond as soon as possible. Or we could make an appointment to test our application as well.
+<!-- <br /> -->
 
-- credentials and .pem are uploaded in the folder.
+2. credentials and .pem are uploaded in the folder.
 
-<br />
+<!-- <br /> -->
 
-- Quickstart of the application
+3. Quickstart of the application
 
 At the **root path**, you are supposed to find a script called \"start\. sh\". This script will establish the virtual environment, prepare you with all the dependencies, and run on the server. Use the command below to run the project.
 
@@ -45,7 +45,7 @@ At the **root path**, you are supposed to find a script called \"start\. sh\". T
 ```
 <img src="./static/how_to_use_code_1.png"></img>
 <br />
-- Accounts
+4. Accounts
 Inorder to test the application, you might need some accounts for our application.
 
 > Admin Accounts:  adminname: admin1, password: admin1
@@ -53,32 +53,32 @@ Inorder to test the application, you might need some accounts for our applicatio
 > User Accounts: username: test1, password: test1
 
 You can register User account in the register section of admin page.
-You can register new admin account by manipulating the TABLE #admins# in MySQL.
+You can register new admin account by manipulating the TABLE *admins* in MySQL.
 
-<br />
-<br />
+<!-- <br />
+<br /> -->
 
 
 # Introduction
 A web application for storing and browsing photographs. 
 
-<br />
+<!-- <br /> -->
 
 ## Start
 > This part basically explains how to run the project.
 
 - ### Quickstart
   At the **root path**, you are supposed to find a script called \"start\. sh\". This script will establish the virtual environment, prepare you with all the dependencies, and run on the server. Use the command below to run the project.
-  <br />
+  <!-- <br /> -->
   ```
    ./start.sh 
    ```
-  <br />
+  <!-- <br /> -->
   
   <img src="./static/how_to_use_code_1.png"></img>
 
-<br />
-<br />
+<!-- <br />
+<br /> -->
 
 ## Architecture
 
@@ -86,7 +86,7 @@ A web application for storing and browsing photographs.
 For web framework, we use `Flask` as our application.
 Right now, we are using `template` for the UI part since it is relatively simple to accomplish. However, we have established a version2.0 application which uses `react.js` for our front-end application. In that way, our application could be more flexible and powerful. `flask` would be API layer, our front-end and back-end would be seperated in that way.  
 Since most of our data are structured, we tend to use `MySQL` to store all our data to have a better performance and be easier to update.
-<br />
+<!-- <br /> -->
 
 ### Version 1.0 (Current version)
 <div style="display: flex; justify-content: flex-start">
@@ -97,8 +97,8 @@ Since most of our data are structured, we tend to use `MySQL` to store all our d
     The architechture of our version1.0 project basically looks like this. We have a app folder which contains main content of our flask app. We divided this folder by the functions of each part as admin, user and so on. Except for app folder, we have several files related to version control and project co-working, and a file related to code-format-checking.
   </div>
 </div>
-<br />
-<br />
+<!-- <br />
+<br /> -->
 
 ### Version 2.0 (Developing version)
 <div style="display: flex; justify-content: flex-start">
@@ -109,8 +109,8 @@ Since most of our data are structured, we tend to use `MySQL` to store all our d
       We use react.js as front-end in this version because React.js could provide user with more friendly interaction, more beautiful UI, and more powerful functions. You could find more in the video we recorded.
     </div>
   </div>
-  <br />
-  <br />
+  <!-- <br />
+  <br /> -->
   
   
 
@@ -136,7 +136,8 @@ After login, you can access all the functions by clicking the navigation bar at 
 <strong>- Album:</strong> you could view all your images and related images transformed here.<br />
 <strong>- Change Password:</strong> you could change password of the account you are currently login. <br />
 <strong>- Logout:</strong> you could logout the account and redirect to the entrance page by clicking Logout. <br />
-<br />
+<!-- <br /> -->
+
 - **Admin Login**<br />
 <strong>Admin login is the entrance of admins.</strong><br />
 You would be asked to input the username and password to login.<br />
@@ -144,7 +145,8 @@ After login, you can access all the functions by clicking the navigation bar at 
 <strong>- Register:</strong> you could add new accounts of normal users here by typing in <code>Username</code>, <code>Password</code> and <code>Email</code><br />
 <strong>- Edit&Delete:</strong> you could delete or edit the name and password of normal user accounts here. <br />
 <strong>- Logout:</strong> you could logout the account and redirect to the entrance page by clicking Logout. <br />
-<br />
+<!-- <br /> -->
+
 - **Password Recovery**<br />
 <strong>If you cannot recall your password, please click <code>PasswordRecovery</code></strong>
               You would be asked to input the username of your account. An email will be sent to the email address attached to your account for you to reset the password.
@@ -163,7 +165,7 @@ After login as normal user, you would see the homepage of normal user shown as t
 <strong>- Album:</strong> you could view all your images and related images transformed here.<br /> 
 <strong>- Change Password:</strong> you could change password of the account you are currently login. <br />
 <strong>- Logout:</strong> you could logout the account and redirect to the entrance page by clicking Logout.<br />
-<br />
+<!-- <br /> -->
 
 
 ## 3. Admin
@@ -177,7 +179,7 @@ the top of the page.</strong><br />
 <strong>- Register:</strong> you could add new accounts of normal users here by typing in <code>Username</code>, <code>Password</code> and <code>Email</code><br />
 <strong>- Edit&Delete:</strong> you could delete or edit the name and password of normal user accounts here.<br />
 <strong>- Logout:</strong> you could logout the account and redirect to the entrance page by clicking Logout. <br />
-<br />
+<!-- <br /> -->
 
 ## 4. Password Recovery
 <strong>If you cannot recall your password, please click <code>PasswordRecovery</code></strong>
@@ -186,7 +188,7 @@ You would be asked to input the username of your account. An email will be sent 
 
 
 # Developer Tutorial
-### Initialize Project.
+## Initialize Project.
   - #### Prepare  
     - Import dataset into your MySQL system. The simplest way of doing this is importing '/ece1779_project1.sql' .
     - Build your virtual environment for python.
@@ -210,7 +212,7 @@ You would be asked to input the username of your account. An email will be sent 
     
     > python run.py
 
-### Tech Stack
+## Tech Stack
 **Version 1.0**
 - python
 - flask
@@ -218,7 +220,7 @@ You would be asked to input the username of your account. An email will be sent 
 
 > You could see the details of all the dependencies at "requirements.txt"
 
-### Appendix
+## Appendix
 - [Flask](https://flask.palletsprojects.com/en/2.0.x/)
 - [python](https://www.python.org/)
 - [React.js](https://reactjs.org/)
