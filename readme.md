@@ -2,8 +2,10 @@
 
 ----
 - [Anouncement](#anouncement)
+- [important information for test](#important-information-for-test)
 - [Introduction - how to use the web application](#introduction)
   - [Start](#start) 
+  - [user account needed for our application](#accounts)
   - [Architecture](#architecture)
   - [Database](#database)
 - [User Tutorial - how to access each module of the application](#user-tutorial)
@@ -14,15 +16,43 @@
 - [Developer Tutorial](#developer-tutorial)
   - [Initialize Project](#initialize-project)
   - [Tech Stack](#tech-stack)
-  - [Functions](#functions)
 
 <br />
 
 # Anouncement
 
-In this document, we will explain the important parts of our application and introduce how to use it. We also made a video about our application and each page of it which goes into more details. If there is still anything unclear, please contact us at [lizhenqiao@mail.utoronto.ca](mailto:lizhenqiao@mail.utoronto.ca), we will respond as soon as possible.
+In this document, we will explain the important parts of our application and introduce how to use it. We realize that even with this document, the testing affairs may still be hard. So, We also made a [video(click to watch)](https://www.bilibili.com/video/BV1944y1x7xn/) about our application and each page of it which goes into more details. If there is still anything unclear, please contact us at [lizhenqiao@mail.utoronto.ca](mailto:lizhenqiao@mail.utoronto.ca), we will respond as soon as possible. Or we could make an appointment to test our application as well.
+
+We have accomplished all the functions required for the project, including hash the password, limit of the upload image, rename the image if have a repetition conflict, exception handling and so on. Considering that they are not complicated and can be mostly solved by using third-party libraries, this documentation will not go into details of the implementation of them. Besides, we will attach our code anyway.
 
 <br />
+
+# important information for test
+
+- We made a [video(click to watch)](https://www.bilibili.com/video/BV1944y1x7xn/) about our application and each page of it which goes into more details. If there is still anything unclear, please contact us at [lizhenqiao@mail.utoronto.ca](mailto:lizhenqiao@mail.utoronto.ca), we will respond as soon as possible. Or we could make an appointment to test our application as well.
+<br />
+- credentials and .pem are uploaded in the folder.
+<br />
+- Quickstart of the application
+At the **root path**, you are supposed to find a script called \"start\. sh\". This script will establish the virtual environment, prepare you with all the dependencies, and run on the server. Use the command below to run the project.
+
+```
+./start.sh 
+```
+<img src="./static/how_to_use_code_1.png"></img>
+<br />
+- Accounts
+Inorder to test the application, you might need some accounts for our application.
+
+> Admin Accounts:  adminname: admin1, password: admin1
+> User Accounts: username: test1, password: test1
+
+You can register User account in the register section of admin page.
+You can register new admin account by manipulating the TABLE #admins# in MySQL.
+
+<br />
+<br />
+
 
 # Introduction
 A web application for storing and browsing photographs. 
@@ -41,6 +71,20 @@ A web application for storing and browsing photographs.
   <br />
   
   <img src="./static/how_to_use_code_1.png"></img>
+
+<br />
+<br />
+
+## Accounts
+user account needed for our application
+
+Inorder to test the application, you might need some accounts for our application.
+
+> Admin Accounts:  adminname: admin1, password: admin1
+> User Accounts: username: test1, password: test1
+
+You can register User account in the register section of admin page.
+You can register new admin account by manipulating the TABLE #admins# in MySQL.
 
 <br />
 <br />
