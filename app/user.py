@@ -83,11 +83,14 @@ def upload(user_name):
     if request.method == 'POST':
         if request.files['img']:
             f = request.files['img']
+            # set the cursor to the file's position
             f.seek(0, 2)
             file_length = f.tell()
-            if file_length > 10000000:
+            if file_length > 1024*1024:
                 flash('Error:Image size is too large', category='error')
                 return render_template('image/image_upload.html')
+            # set the cursor back to the original position
+            f.seek(0)
             if f and allowed_file(f.filename):
                 available_fname = get_available_filename(f.filename)
                 fname = secure_filename(available_fname)
@@ -119,7 +122,7 @@ def upload(user_name):
             url = request.form['image_url']
             if validators.url(url):
                 file_length = urllib.request.urlopen(url).length
-                if file_length > 10000000:
+                if file_length > 1024*1024:
                     flash('Error:Image size is too large', category='error')
                     return render_template('image/image_upload.html')
                 file = urlparse(url)
