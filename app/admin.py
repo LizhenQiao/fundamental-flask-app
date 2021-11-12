@@ -81,7 +81,6 @@ def delete(user_id):
     return redirect(url_for('user_list'))
 
 
-
 @webapp.route('/admin/edit/<int:user_id>', methods=['GET'])
 @admin_required
 def edit(user_id):
@@ -113,7 +112,6 @@ def edit_save(user_id):
         mysql.connection.commit()
 
         return redirect(url_for('user_list'))
-
 
 
 @webapp.route('/admin/logout', methods=['GET', 'POST'])
