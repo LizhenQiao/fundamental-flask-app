@@ -1,0 +1,1 @@
+- Could establish user accounts which have same usernames.

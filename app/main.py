@@ -63,7 +63,6 @@ def email_sent():
 def reset_password(token):
     try:
         t = s.loads(token, max_age=600)
-        # 异常处理之后要做一下，比如user_name没有查到等corner case.
         if request.method == 'POST':
             user_name = request.form['username']
             new_password = request.form['new_password'].encode('utf-8')
