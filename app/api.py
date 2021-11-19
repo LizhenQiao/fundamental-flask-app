@@ -54,11 +54,14 @@ def transformation(url, blur_name, shade_name, spread_name, blur_path, shade_pat
             img_spread.spread(radius=8)
             img_spread.save(filename=spread_path)
     with open(blur_path, "rb") as f:
-        s3.upload_fileobj(f, S3_BUCKET, blur_name, ExtraArgs={'ACL': 'public-read', 'ContentType': filetype})
+        s3.upload_fileobj(f, S3_BUCKET, blur_name, ExtraArgs={
+                          'ACL': 'public-read', 'ContentType': filetype})
     with open(shade_path, "rb") as f:
-        s3.upload_fileobj(f, S3_BUCKET, shade_name, ExtraArgs={'ACL': 'public-read', 'ContentType': filetype})
+        s3.upload_fileobj(f, S3_BUCKET, shade_name, ExtraArgs={
+                          'ACL': 'public-read', 'ContentType': filetype})
     with open(spread_path, "rb") as f:
-        s3.upload_fileobj(f, S3_BUCKET, spread_name, ExtraArgs={'ACL': 'public-read', 'ContentType': filetype})
+        s3.upload_fileobj(f, S3_BUCKET, spread_name, ExtraArgs={
+                          'ACL': 'public-read', 'ContentType': filetype})
 
 
 @webapp.route("/api/register", methods=['POST'])
@@ -119,7 +122,9 @@ def upload_api():
             f.save(filepath)
             file_size = os.stat(filepath).st_size
             ftype = fname.rsplit('.', 1)[1].lower()
-            s3.upload_fileobj(f, S3_BUCKET, fname, ExtraArgs={'ACL': 'public-read', 'ContentType': ftype})
+            with open(filepath, "rb") as f:
+                s3.upload_fileobj(f, S3_BUCKET, fname, ExtraArgs={
+                    'ACL': 'public-read', 'ContentType': ftype})
             url_o = S3_LOCATION + fname
             blur_name = 'blur_{}'.format(fname)
             shade_name = 'shade_{}'.format(fname)
@@ -127,7 +132,8 @@ def upload_api():
             blur_path = os.path.join(IMAGE_UPLOAD, blur_name)
             shade_path = os.path.join(IMAGE_UPLOAD, shade_name)
             spread_path = os.path.join(IMAGE_UPLOAD, spread_name)
-            transformation(url_o, blur_name, shade_name, spread_name, blur_path, shade_path, spread_path, ftype)
+            transformation(url_o, blur_name, shade_name, spread_name,
+                           blur_path, shade_path, spread_path, ftype)
             blur_size = os.stat(blur_path).st_size
             shade_size = os.stat(shade_path).st_size
             spread_size = os.stat(spread_path).st_size
