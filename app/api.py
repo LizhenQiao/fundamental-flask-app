@@ -79,7 +79,7 @@ def register_api():
         password = data['password'].encode('utf-8')
         hash_password = bcrypt.hashpw(password, bcrypt.gensalt())
         cur = mysql.connection.cursor()
-        query = 'INSERT INTO users(user_name, user_password, user_email) VALUES ("{}", "{}", "{}")'.format(
+        query = "INSERT INTO users(user_name, user_password, user_email) VALUES ('{}', '{}', '{}')".format(
             username, hash_password, email)
         cur.execute(query)
         mysql.connection.commit()
@@ -101,7 +101,7 @@ def upload_api():
     # upload files. Only available for normal users.
     try:
         f = request.files['file']
-        name = request.form['name']
+        name = request.form['username']
         input_password = request.form['password'].encode('utf-8')
         f.seek(0, 2)
         file_length = f.tell()

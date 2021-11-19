@@ -12,7 +12,11 @@ from .utils import login_required
 from werkzeug.utils import secure_filename
 from wand.image import Image
 import random
+<<<<<<< HEAD
 from .config import S3_KEY, S3_SECRET, S3_BUCKET, S3_LOCATION
+=======
+from app.config import S3_KEY, S3_SECRET, S3_BUCKET, S3_LOCATION
+>>>>>>> 6560f6b6d889f1041a22eb33325ef5dfb1e38189
 s3 = boto3.client(
     "s3",
     aws_access_key_id=S3_KEY,
@@ -66,7 +70,8 @@ def user_login():
                 session['user_id'] = user['user_id']
                 return redirect(url_for('user_page', user_name=session['user_name']))
             else:
-                flash('Error password or username, please try again', category='error')
+                flash('Error password or username, please try again',
+                      category='error')
                 return render_template('user/user_login.html')
     else:
         return render_template('user/user_login.html')
@@ -100,7 +105,8 @@ def upload(user_name):
                 available_fname = get_available_filename(f.filename)
                 fname = secure_filename(available_fname)
                 ftype = fname.rsplit('.', 1)[1].lower()
-                s3.upload_fileobj(f, S3_BUCKET, fname, ExtraArgs={'ACL': 'public-read', 'ContentType': ftype})
+                s3.upload_fileobj(f, S3_BUCKET, fname, ExtraArgs={
+                                  'ACL': 'public-read', 'ContentType': ftype})
                 url_o = S3_LOCATION + fname
                 blur_name = 'blur_{}'.format(fname)
                 shade_name = 'shade_{}'.format(fname)
@@ -108,7 +114,8 @@ def upload(user_name):
                 blur_path = os.path.join(IMAGE_UPLOAD, blur_name)
                 shade_path = os.path.join(IMAGE_UPLOAD, shade_name)
                 spread_path = os.path.join(IMAGE_UPLOAD, spread_name)
-                transformation(url_o, blur_name, shade_name, spread_name, blur_path, shade_path, spread_path, ftype)
+                transformation(url_o, blur_name, shade_name, spread_name,
+                               blur_path, shade_path, spread_path, ftype)
                 url_blur = S3_LOCATION + blur_name
                 url_shade = S3_LOCATION + shade_name
                 url_spread = S3_LOCATION + spread_name
@@ -131,8 +138,8 @@ def upload(user_name):
             if validators.url(url):
                 file_length = urllib.request.urlopen(url).length
                 if file_length > 1024*1024:
-                     flash('Error:Image size is too large', category='error')
-                     return render_template('image/image_upload.html')
+                    flash('Error:Image size is too large', category='error')
+                    return render_template('image/image_upload.html')
                 file = urlparse(url)
                 filename = os.path.basename(file.path)
                 filetype = filename.rsplit('.', 1)[1].lower()
@@ -140,7 +147,8 @@ def upload(user_name):
                 filepath = os.path.join(IMAGE_UPLOAD, filename)
                 urllib.request.urlretrieve(url, filepath)
                 with open(filepath, "rb") as f:
-                    s3.upload_fileobj(f, S3_BUCKET, filename, ExtraArgs={'ACL': 'public-read', 'ContentType': filetype})
+                    s3.upload_fileobj(f, S3_BUCKET, filename, ExtraArgs={
+                                      'ACL': 'public-read', 'ContentType': filetype})
                 url_o = S3_LOCATION + filename
                 os.remove(filepath)
                 blur_path = os.path.join(IMAGE_UPLOAD, 'blur_' + filename)
@@ -152,7 +160,8 @@ def upload(user_name):
                 url_blur = S3_LOCATION + blur_name
                 url_shade = S3_LOCATION + shade_name
                 url_spread = S3_LOCATION + spread_name
-                transformation(url_o, blur_name, shade_name, spread_name, blur_path, shade_path, spread_path, filetype)
+                transformation(url_o, blur_name, shade_name, spread_name,
+                               blur_path, shade_path, spread_path, filetype)
                 cursor = mysql.connection.cursor()
                 query = "INSERT INTO images(image_path, user_id) " \
                         "VALUES (%s, %s)"
@@ -184,19 +193,21 @@ def transformation(url, blur_name, shade_name, spread_name, blur_path, shade_pat
             img_spread.spread(radius=8)
             img_spread.save(filename=spread_path)
     with open(blur_path, "rb") as f:
-        s3.upload_fileobj(f, S3_BUCKET, blur_name, ExtraArgs={'ACL': 'public-read', 'ContentType': filetype})
+        s3.upload_fileobj(f, S3_BUCKET, blur_name, ExtraArgs={
+                          'ACL': 'public-read', 'ContentType': filetype})
     os.remove(blur_path)
     with open(shade_path, "rb") as f:
-        s3.upload_fileobj(f, S3_BUCKET, shade_name, ExtraArgs={'ACL': 'public-read', 'ContentType': filetype})
+        s3.upload_fileobj(f, S3_BUCKET, shade_name, ExtraArgs={
+                          'ACL': 'public-read', 'ContentType': filetype})
     os.remove(shade_path)
     with open(spread_path, "rb") as f:
-        s3.upload_fileobj(f, S3_BUCKET, spread_name, ExtraArgs={'ACL': 'public-read', 'ContentType': filetype})
+        s3.upload_fileobj(f, S3_BUCKET, spread_name, ExtraArgs={
+                          'ACL': 'public-read', 'ContentType': filetype})
     os.remove(spread_path)
 
 
 @webapp.route('/user/<string:user_name>/show', methods=['GET', 'POST'])
 @login_required
-# 图片展示UI考虑加一个×号返回上一级
 def show(user_name):
     try:
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)

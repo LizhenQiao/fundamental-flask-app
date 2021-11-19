@@ -23,3 +23,6 @@ yarn-error.log*
 venv
 __pycache__
 app/static/upload
+
+qlz_config.py
+qlz_db.yaml
