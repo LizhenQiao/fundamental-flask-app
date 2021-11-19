@@ -12,11 +12,7 @@ from .utils import login_required
 from werkzeug.utils import secure_filename
 from wand.image import Image
 import random
-<<<<<<< HEAD
-from .config import S3_KEY, S3_SECRET, S3_BUCKET, S3_LOCATION
-=======
 from app.config import S3_KEY, S3_SECRET, S3_BUCKET, S3_LOCATION
->>>>>>> 6560f6b6d889f1041a22eb33325ef5dfb1e38189
 s3 = boto3.client(
     "s3",
     aws_access_key_id=S3_KEY,
