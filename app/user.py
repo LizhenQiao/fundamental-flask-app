@@ -11,9 +11,8 @@ from urllib.parse import urlparse
 from .utils import login_required
 from werkzeug.utils import secure_filename
 from wand.image import Image
-from io import StringIO
 import random
-from config import S3_KEY, S3_SECRET, S3_BUCKET, S3_LOCATION
+from .config import S3_KEY, S3_SECRET, S3_BUCKET, S3_LOCATION
 s3 = boto3.client(
     "s3",
     aws_access_key_id=S3_KEY,
@@ -85,99 +84,6 @@ def user_page(user_name):
 
 @webapp.route('/user/<string:user_name>/upload', methods=['GET', 'POST'])
 @login_required
-# def upload(user_name):
-#     if request.method == 'POST':
-#         if request.files['img']:
-#             f = request.files['img']
-#             # set the cursor to the file's position
-#             f.seek(0, 2)
-#             file_length = f.tell()
-#             if file_length > 1024*1024:
-#                 flash('Error:Image size is too large', category='error')
-#                 return render_template('image/image_upload.html')
-#             # set the cursor back to the original position
-#             f.seek(0)
-#             if f and allowed_file(f.filename):
-#                 available_fname = get_available_filename(f.filename)
-#                 fname = secure_filename(available_fname)
-#                 image = '/static/upload/{}'.format(fname)
-#                 filepath = os.path.join(IMAGE_UPLOAD, fname)
-#                 s3.upload_fileobj(f, S3_BUCKET, fname,
-#                                   ExtraArgs={'ACL': 'public-read'})
-#                 url_origin = S3_LOCATION + fname
-#                 blur_img = '/static/upload/blur_{}'.format(fname)
-#                 shade_img = '/static/upload/shade_{}'.format(fname)
-#                 spread_img = '/static/upload/spread_{}'.format(fname)
-#                 blur_path = os.path.join(IMAGE_UPLOAD, 'blur_' + fname)
-#                 shade_path = os.path.join(IMAGE_UPLOAD, 'shade_' + fname)
-#                 spread_path = os.path.join(IMAGE_UPLOAD, 'spread_' + fname)
-#                 transformation(url_origin, blur_path, shade_path, spread_path)
-#             else:
-#                 flash('Error:Wrong image type', category='error')
-#                 return render_template('image/image_upload.html')
-# #             cursor = mysql.connection.cursor()
-# #             query = "INSERT INTO images(image_path, user_id) " \
-# #                     "VALUES (%s, %s)"
-# #             cursor.execute(query, (image, session['user_id']))
-# #             cursor.execute(query, (blur_img, session['user_id']))
-# #             cursor.execute(query, (shade_img, session['user_id']))
-# #             cursor.execute(query, (spread_img, session['user_id']))
-# #             mysql.connection.commit()
-# #             cursor.close()
-# #             flash('Upload by local files Successfully', category='info')
-# #             return render_template('image/image_upload.html')
-# #         else:
-# #             url = request.form['image_url']
-# #             if validators.url(url):
-# #                 file_length = urllib.request.urlopen(url).length
-# #                 if file_length > 1024*1024:
-# #                     flash('Error:Image size is too large', category='error')
-# #                     return render_template('image/image_upload.html')
-# #                 file = urlparse(url)
-# #                 filename = os.path.basename(file.path)
-# #                 url_image = "/static/upload/" + filename
-# #                 filepath = os.path.join(IMAGE_UPLOAD, filename)
-# #                 urllib.request.urlretrieve(url, filepath)
-# #                 blur_img = '/static/upload/blur_{}'.format(filename)
-# #                 shade_img = '/static/upload/shade_{}'.format(filename)
-# #                 spread_img = '/static/upload/spread_{}'.format(filename)
-# #                 blur_path = os.path.join(IMAGE_UPLOAD, 'blur_' + filename)
-# #                 shade_path = os.path.join(IMAGE_UPLOAD, 'shade_' + filename)
-# #                 spread_path = os.path.join(IMAGE_UPLOAD, 'spread_' + filename)
-# #                 transformation(filepath, blur_path, shade_path, spread_path)
-# #                 s3.upload_fileobj(filepath, S3_BUCKET, fname,
-# #                                   ExtraArgs={'ACL': 'public-read'})
-# #                 cursor = mysql.connection.cursor()
-# #                 query = "INSERT INTO images(image_path, user_id) " \
-# #                     "VALUES (%s, %s)"
-# #                 cursor.execute(query, (url_image, session['user_id']))
-# #                 cursor.execute(query, (blur_img, session['user_id']))
-# #                 cursor.execute(query, (shade_img, session['user_id']))
-# #                 cursor.execute(query, (spread_img, session['user_id']))
-# #                 mysql.connection.commit()
-# #                 cursor.close()
-# #                 flash('Upload by URL successfully', category='info')
-# #                 return render_template('image/image_upload.html')
-# #             else:
-# #                 flash('Error:Wrong URL', category='error')
-# #                 return render_template('image/image_upload.html')
-#     else:
-#         return render_template('image/image_upload.html')
-#
-#
-# def transformation(url_origin, blur_path, shade_path, spread_path):
-#     response = urllib.request.urlopen(url_origin)
-#     with Image(filename=response) as original:
-#         with original.clone() as img_blur:
-#             img_blur.blur(radius=0, sigma=8)
-#             img_blur.save(filename=blur_path)
-#         with original.clone() as img_shade:
-#             img_shade.shade(gray=True, azimuth=286.0, elevation=45.0)
-#             img_shade.save(filename=shade_path)
-#         with original.clone() as img_spread:
-#             img_spread.spread(radius=8)
-#             img_spread.save(filename=spread_path)
-
 def upload(user_name):
     if request.method == 'POST':
         if request.files['img']:

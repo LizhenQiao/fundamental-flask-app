@@ -1,7 +1,6 @@
 from flask import Flask
 
 
-
 webapp = Flask(__name__)
 webapp.secret_key = "you-will-never-know-lol"
 webapp.jinja_env.auto_reload = True

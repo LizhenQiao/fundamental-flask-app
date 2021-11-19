@@ -1,3 +1,4 @@
+import urllib
 from flask import request, jsonify
 from app import webapp
 from .MySQL_DB import mysql
@@ -7,6 +8,13 @@ import os
 from werkzeug.utils import secure_filename
 from wand.image import Image
 import random
+import boto3
+from .config import S3_KEY, S3_SECRET, S3_BUCKET, S3_LOCATION
+s3 = boto3.client(
+    "s3",
+    aws_access_key_id=S3_KEY,
+    aws_secret_access_key=S3_SECRET
+)
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'bmp'])
 BASEDIR = os.path.dirname(os.path.abspath(__file__))
@@ -33,8 +41,9 @@ def get_available_filename(filename):
     return filename
 
 
-def transformation(filepath, blur_path, shade_path, spread_path):
-    with Image(filename=filepath) as original:
+def transformation(url, blur_name, shade_name, spread_name, blur_path, shade_path, spread_path, filetype):
+    response = urllib.request.urlopen(url)
+    with Image(file=response) as original:
         with original.clone() as img_blur:
             img_blur.blur(radius=0, sigma=8)
             img_blur.save(filename=blur_path)
@@ -44,6 +53,12 @@ def transformation(filepath, blur_path, shade_path, spread_path):
         with original.clone() as img_spread:
             img_spread.spread(radius=8)
             img_spread.save(filename=spread_path)
+    with open(blur_path, "rb") as f:
+        s3.upload_fileobj(f, S3_BUCKET, blur_name, ExtraArgs={'ACL': 'public-read', 'ContentType': filetype})
+    with open(shade_path, "rb") as f:
+        s3.upload_fileobj(f, S3_BUCKET, shade_name, ExtraArgs={'ACL': 'public-read', 'ContentType': filetype})
+    with open(spread_path, "rb") as f:
+        s3.upload_fileobj(f, S3_BUCKET, spread_name, ExtraArgs={'ACL': 'public-read', 'ContentType': filetype})
 
 
 @webapp.route("/api/register", methods=['POST'])
@@ -100,20 +115,29 @@ def upload_api():
         if f and allowed_file(f.filename):
             available_fname = get_available_filename(f.filename)
             fname = secure_filename(available_fname)
-            image = '/static/upload/{}'.format(fname)
             filepath = os.path.join(IMAGE_UPLOAD, fname)
             f.save(filepath)
             file_size = os.stat(filepath).st_size
-            blur_img = '/static/upload/blur_{}'.format(fname)
-            shade_img = '/static/upload/shade_{}'.format(fname)
-            spread_img = '/static/upload/spread_{}'.format(fname)
-            blur_path = os.path.join(IMAGE_UPLOAD, 'blur_' + fname)
-            shade_path = os.path.join(IMAGE_UPLOAD, 'shade_' + fname)
-            spread_path = os.path.join(IMAGE_UPLOAD, 'spread_' + fname)
-            transformation(filepath, blur_path, shade_path, spread_path)
+            ftype = fname.rsplit('.', 1)[1].lower()
+            s3.upload_fileobj(f, S3_BUCKET, fname, ExtraArgs={'ACL': 'public-read', 'ContentType': ftype})
+            url_o = S3_LOCATION + fname
+            blur_name = 'blur_{}'.format(fname)
+            shade_name = 'shade_{}'.format(fname)
+            spread_name = 'spread_{}'.format(fname)
+            blur_path = os.path.join(IMAGE_UPLOAD, blur_name)
+            shade_path = os.path.join(IMAGE_UPLOAD, shade_name)
+            spread_path = os.path.join(IMAGE_UPLOAD, spread_name)
+            transformation(url_o, blur_name, shade_name, spread_name, blur_path, shade_path, spread_path, ftype)
             blur_size = os.stat(blur_path).st_size
             shade_size = os.stat(shade_path).st_size
             spread_size = os.stat(spread_path).st_size
+            os.remove(filepath)
+            os.remove(blur_path)
+            os.remove(shade_path)
+            os.remove(spread_path)
+            url_blur = S3_LOCATION + blur_name
+            url_shade = S3_LOCATION + shade_name
+            url_spread = S3_LOCATION + spread_name
         else:
             print('Unavailable image type.')
             return jsonify({"success": False, "error": {
@@ -147,10 +171,10 @@ def upload_api():
         cursor = mysql.connection.cursor()
         query = "INSERT INTO images(image_path, user_id) " \
                 "VALUES (%s, %s)"
-        cursor.execute(query, (image, user_id))
-        cursor.execute(query, (blur_img, user_id))
-        cursor.execute(query, (shade_img, user_id))
-        cursor.execute(query, (spread_img, user_id))
+        cursor.execute(query, (url_o, user_id))
+        cursor.execute(query, (url_blur, user_id))
+        cursor.execute(query, (url_shade, user_id))
+        cursor.execute(query, (url_spread, user_id))
         mysql.connection.commit()
         cursor.close()
         return jsonify({
