@@ -108,7 +108,7 @@ def upload_api():
         input_password = request.form['password'].encode('utf-8')
         f.seek(0, 2)
         file_length = f.tell()
-        if file_length > 1024*1024:
+        if file_length > 1024*1024*100:
             return jsonify({"success": False, "error": {
                 "code": 10003,
                 "message": "Image too large. Upload limit is 1Mb."
